@@ -1,0 +1,154 @@
+import expressAsyncHandler from "express-async-handler";
+import ProductModel from "../Models/ProductModel.js";
+import { v2 as cloudinary } from "cloudinary";
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await ProductModel.find({});
+    res.status(200).json({ message: "Welcome to the dashboard", products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error", error });
+  }
+};
+export const uploadProduct = expressAsyncHandler(async (req, res, next) => {
+  const {
+    name,
+    description,
+    category,
+    brand,
+    price,
+    cost_price,
+    stock,
+    warranty,
+    supplier_id,
+  } = req.body;
+
+  if (
+    !name ||
+    !description ||
+    !category ||
+    !brand ||
+    !price ||
+    !cost_price ||
+    !stock ||
+    !warranty ||
+    !supplier_id ||
+    !req.file
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all required fields" });
+  }
+
+  try {
+    const product = await ProductModel.findOne({ name });
+    if (product) {
+      return res.status(400).json({ message: "Product already exists" });
+    }
+    const newProduct = new ProductModel({
+      name,
+      description,
+      category,
+      brand,
+      price,
+      cost_price,
+      stock,
+      warranty,
+      supplier_id,
+      image_url: req.file.path,
+    });
+    await newProduct.save();
+    res
+      .status(201)
+      .json({ message: "Product uploaded successfully", newProduct });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error", error });
+  }
+});
+
+export const deleteProduct = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const product = await ProductModel.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const imageUrl = product.image_url;
+    if (imageUrl) {
+      const public_id = imageUrl.split("/").pop().split(".")[0];
+
+      const deleteimage = await cloudinary.uploader.destroy(
+        `inventory/${public_id}`
+      );
+
+      if (deleteimage.result !== "ok") {
+        return res
+          .status(500)
+          .json({ message: "Failed to delete image from Cloudinary" });
+      }
+
+      const productdelete = await ProductModel.deleteOne({ _id: id });
+      if (productdelete) {
+        return res
+          .status(200)
+          .json({ message: "Product deleted successfully", productdelete });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error", error });
+  }
+});
+
+export const updateProduct = expressAsyncHandler(async (req, res) => {
+  const { name, description, category, brand, supplier_id, warranty, price } =
+    req.body;
+  const id = req.params.id;
+  try {
+    const Product = await ProductModel.findById(id);
+    if (!Product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (req.file && Product.image_url) {
+      const imageUrl = Product.image_url;
+      const public_id = imageUrl.split("/").pop().split(".")[0];
+      console.log(public_id);
+
+      const deleteimage = await cloudinary.uploader.destroy(
+        `inventory/${public_id}`
+      );
+
+      if (deleteimage.result !== "ok") {
+        return res.status(500).json({ message: "Delete image failed" });
+      }
+      if (req.file) {
+        Product.image_url = req.file.path;
+      }
+
+      if (name) Product.name = name;
+      if (description) Product.description = description;
+      if (category) Product.category = category;
+      if (brand) Product.brand = brand;
+      if (warranty) Product.warranty = warranty;
+      if (supplier_id) Product.supplier_id = supplier_id;
+      if (price) Product.price = price;
+
+      const updatedproduct = await Product.save();
+      if (updatedproduct) {
+        res
+          .status(200)
+          .json({ message: "Product updated successfully", Product });
+      } else {
+        return res.status(400).json({ message: "Product not updated" });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "internal error", error });
+  }
+});
