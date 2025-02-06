@@ -1,3 +1,4 @@
 import ProductRoutes from "./ProductRoutes.js";
 import SupplierRoutes from "./SupplierRoutes.js";
-export { ProductRoutes, SupplierRoutes };
+import StockRoutes from "./StockRoutes.js";
+export { ProductRoutes, SupplierRoutes, StockRoutes };

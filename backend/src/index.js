@@ -27,6 +27,7 @@ app.use(
 
 app.use("/api/product", routes.ProductRoutes);
 app.use("/api/supplier", routes.SupplierRoutes);
+app.use("/api/stock", routes.StockRoutes);
 
 mongodbCon();
 app.listen(process.env.PORT, () => {

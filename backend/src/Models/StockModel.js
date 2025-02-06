@@ -24,7 +24,7 @@ const StockScema = new mongoose.Schema({
   },
   total_cost: {
     type: Number,
-    require: true,
   },
 });
-export default Stock = mongoose.model("Stock", StockScema);
+const Stock = mongoose.model("Stock", StockScema);
+export default Stock;
