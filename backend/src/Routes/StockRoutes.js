@@ -4,9 +4,10 @@ import {
   getAllStock,
   updatestock,
 } from "../Controllers/StockContoller.js";
+import { admin, both, protect } from "../middlewares/protect.js";
 
 const router = express.Router();
-router.post("/createstock", createStock);
-router.patch("/updatestck/:id", updatestock);
-router.get("/getstock", getAllStock);
+router.post("/createstock", protect, admin, createStock);
+router.patch("/updatestck/:id", protect, admin, updatestock);
+router.get("/getstock", protect, both, getAllStock);
 export default router;
