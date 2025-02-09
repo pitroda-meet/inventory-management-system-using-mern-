@@ -24,11 +24,10 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
-
+app.use("/api/user", routes.UserRoutes);
 app.use("/api/product", routes.ProductRoutes);
 app.use("/api/supplier", routes.SupplierRoutes);
 app.use("/api/stock", routes.StockRoutes);
-
 mongodbCon();
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

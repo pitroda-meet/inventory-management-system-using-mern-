@@ -18,17 +18,17 @@ const UserScema = new mongoose.Schema({
   role: { type: String, enum: ["Admin", "Staff"], default: "Staff" },
 });
 
-UserScema.pre("save", async (next) => {
+UserScema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   try {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(salt, this.password);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
     next(error);
   }
 });
-UserScema.methods.generateToken = () => {
+UserScema.methods.generateToken = function () {
   return jwt.sign(
     {
       userId: this._id,
