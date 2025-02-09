@@ -98,3 +98,17 @@ export const updatestock = expressAsyncHandler(async (req, res) => {
     res.status(500).json({ message: "Error", error });
   }
 });
+
+export const getAllStock = expressAsyncHandler(async (req, res, next) => {
+  try {
+    const stocks = await StockModel.find({}).populate("product_id");
+    if (stocks.length > 0) {
+      res.status(200).json({ success: true, stocks });
+    } else {
+      res.status(404).json({ message: "No stocks found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "internal error" });
+  }
+});
