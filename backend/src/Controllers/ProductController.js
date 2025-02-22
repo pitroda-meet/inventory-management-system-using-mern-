@@ -4,8 +4,19 @@ import { v2 as cloudinary } from "cloudinary";
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find({});
-    res.status(200).json({ message: "Welcome to the dashboard", products });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+    const products = await ProductModel.find().skip(skip).limit(limit);
+    const totalproduct = await ProductModel.countDocuments();
+    const totalPages = Math.ceil(totalproduct / limit);
+    res.status(200).json({
+      message: "Welcome to the dashboard",
+      products,
+      totalproduct,
+      page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error", error });
@@ -104,51 +115,124 @@ export const deleteProduct = expressAsyncHandler(async (req, res) => {
   }
 });
 
+// export const updateProduct = expressAsyncHandler(async (req, res) => {
+//   const { name, description, category, brand, supplier_id, warranty, price } =
+//     req.body;
+//   const id = req.params.id;
+//   try {
+//     const Product = await ProductModel.findById(id);
+//     if (!Product) {
+//       return res.status(404).json({ message: "Product not found" });
+//     }
+
+//     if (req.file && Product.image_url) {
+//       const imageUrl = Product.image_url;
+//       const public_id = imageUrl.split("/").pop().split(".")[0];
+//       console.log(public_id);
+
+//       const deleteimage = await cloudinary.uploader.destroy(
+//         `inventory/${public_id}`
+//       );
+
+//       if (deleteimage.result !== "ok") {
+//         return res.status(500).json({ message: "Delete image failed" });
+//       }
+//       if (req.file) {
+//         Product.image_url = req.file.path;
+//       }
+
+//       if (name) Product.name = name;
+//       if (description) Product.description = description;
+//       if (category) Product.category = category;
+//       if (brand) Product.brand = brand;
+//       if (warranty) Product.warranty = warranty;
+//       if (supplier_id) Product.supplier_id = supplier_id;
+//       if (price) Product.price = price;
+
+//       const updatedproduct = await Product.save();
+//       if (updatedproduct) {
+//         res
+//           .status(200)
+//           .json({ message: "Product updated successfully", Product });
+//       } else {
+//         return res.status(400).json({ message: "Product not updated" });
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "internal error", error });
+//   }
+// });
+
 export const updateProduct = expressAsyncHandler(async (req, res) => {
   const { name, description, category, brand, supplier_id, warranty, price } =
     req.body;
   const id = req.params.id;
+
   try {
-    const Product = await ProductModel.findById(id);
-    if (!Product) {
+    const product = await ProductModel.findById(id);
+    if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    if (req.file && Product.image_url) {
-      const imageUrl = Product.image_url;
-      const public_id = imageUrl.split("/").pop().split(".")[0];
-      console.log(public_id);
+    // Handle image deletion and update
+    if (req.file) {
+      if (product.image_url) {
+        const imageUrl = product.image_url;
+        const public_id = imageUrl.split("/").pop().split(".")[0];
 
-      const deleteimage = await cloudinary.uploader.destroy(
-        `inventory/${public_id}`
-      );
+        // Try deleting the image from Cloudinary
+        const deleteResponse = await cloudinary.uploader.destroy(
+          `inventory/${public_id}`
+        );
 
-      if (deleteimage.result !== "ok") {
-        return res.status(500).json({ message: "Delete image failed" });
+        if (deleteResponse.result !== "ok") {
+          console.error("Cloudinary image deletion failed:", deleteResponse);
+          return res
+            .status(500)
+            .json({ message: "Failed to delete image from Cloudinary" });
+        }
       }
-      if (req.file) {
-        Product.image_url = req.file.path;
-      }
 
-      if (name) Product.name = name;
-      if (description) Product.description = description;
-      if (category) Product.category = category;
-      if (brand) Product.brand = brand;
-      if (warranty) Product.warranty = warranty;
-      if (supplier_id) Product.supplier_id = supplier_id;
-      if (price) Product.price = price;
-
-      const updatedproduct = await Product.save();
-      if (updatedproduct) {
-        res
-          .status(200)
-          .json({ message: "Product updated successfully", Product });
-      } else {
-        return res.status(400).json({ message: "Product not updated" });
-      }
+      // Assign new image URL
+      product.image_url = req.file.path;
     }
+
+    // Update product fields if they exist
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (category) product.category = category;
+    if (brand) product.brand = brand;
+    if (warranty) product.warranty = warranty;
+    if (supplier_id) product.supplier_id = supplier_id;
+    if (price) product.price = price;
+
+    // Save updated product
+    const updatedProduct = await product.save();
+    res
+      .status(200)
+      .json({ message: "Product updated successfully", updatedProduct });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "internal error", error });
+    console.error("Error updating product:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 });
+
+export const getProductById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await ProductModel.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(200).json({ product });
+  } catch (error) {
+    console.error("Error retrieving product by ID:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve product", details: error.message });
+  }
+};

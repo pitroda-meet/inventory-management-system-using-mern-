@@ -21,7 +21,7 @@ app.use(
       "Content-Type",
       "Authorization",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   })
 );
 app.use("/api/user", routes.UserRoutes);

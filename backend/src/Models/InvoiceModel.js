@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 
-const OrderSchema = new mongoose.Schema(
+const Invoice = new mongoose.Schema(
   {
-    customer_id: {
+    admin_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: "User",
+      required: true,
+    },
+    customer_name: {
+      type: String,
+      require: true,
     },
     phone: {
       type: Number,
@@ -44,5 +49,3 @@ const OrderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-export default Order = mongoose.model("Order", OrderSchema);
