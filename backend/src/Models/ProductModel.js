@@ -30,7 +30,7 @@ const ProductScema = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      require: true,
+      default: 0,
     },
     warranty: {
       type: Number,

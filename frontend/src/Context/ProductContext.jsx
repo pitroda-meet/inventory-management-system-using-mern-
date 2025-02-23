@@ -52,8 +52,32 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  const addProduct = (product) => {
-    setProducts([...products, product]);
+  const addProduct = async (product) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/product/uploadproduct",
+
+        product,
+        // { withCredentials: true },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (response.data && response.data.newProduct) {
+        setProducts(response.data.newProduct);
+        fetchProduct();
+
+        setIsAddOpen(false);
+        toast.success(response.data.message);
+      } else {
+        console.error("Unexpected server response:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error.response?.data || error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const updateProduct = async (productId, formData) => {
@@ -77,10 +101,8 @@ export const ProductProvider = ({ children }) => {
         setIsEditOpen(false);
         toast.success(response.data.message);
         fetchProduct();
-        alert("Product updated successfully!");
       } else {
         console.error("Unexpected server response:", response.data);
-        alert("Unexpected server response. Check console for details.");
       }
     } catch (error) {
       console.error("Error updating product:", error.response?.data || error);

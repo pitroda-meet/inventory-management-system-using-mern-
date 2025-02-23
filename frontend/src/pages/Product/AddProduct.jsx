@@ -1,7 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useProductContext } from "../../Context/ProductContext";
+import { useNavigate } from "react-router-dom";
+import { useBrand } from "../../Context/BrandContext";
+import { useCategory } from "../../Context/CategoryContext";
+import { useSupplier } from "../../Context/SupplierContext";
 
 const AddProduct = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { addProduct } = useProductContext();
+  const { brands, isbrandLoad } = useBrand();
+  const { categorys, isCategoryLoad } = useCategory();
+  const { suppliers, isLoadSupplier } = useSupplier();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [cost_price, setCostPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+  const [warranty, setWarranty] = useState("");
+  const [stock, setStock] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const navigate = useNavigate();
+  const [supplier, setSupplier] = useState("");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("cost_price", cost_price);
+    formData.append("category", category);
+    formData.append("brand", brand);
+    formData.append("warranty", warranty);
+    formData.append("supplier_id", supplier);
+    if (imageFile) formData.append("image", imageFile);
+
+    try {
+      await addProduct(formData);
+      navigate("/productsmanagement");
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
 
   return (
     <>
@@ -14,11 +71,11 @@ const AddProduct = () => {
         Add New Product
       </button>
       {isOpen && (
-        <div className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen   backdrop-blur-[1px]">
-          <div className="relative p-4 w-full max-w-md">
-            <div className="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen backdrop-blur-[1px] overflow-y-auto">
+          <div className="relative p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white rounded-lg shadow-lg dark:bg-gray-200 p-4 md:p-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">
                   Create New Product
                 </h3>
                 <button
@@ -28,60 +85,216 @@ const AddProduct = () => {
                   ✖
                 </button>
               </div>
-              <form className="p-4 md:p-5">
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2">
-                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="Type product name"
-                      required
+
+              {/* Scrollable Content */}
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-8 overflow-auto p-3">
+                {/* Image Column */}
+                <div className="flex flex-col items-center justify-center">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Product Preview"
+                      className="w-full h-80 object-fill rounded-lg shadow-md mb-4"
                     />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Price
-                    </label>
+                  ) : (
+                    <div className="w-full h-80 bg-white rounded-lg mb-4 flex items-center justify-center">
+                      <p className="text-gray-500">No image selected</p>
+                    </div>
+                  )}
+                  <label className="flex items-center w-full border border-gray-300 rounded-lg overflow-hidden cursor-pointer bg-gray-50">
+                    <span className="px-4 py-2 bg-gray-800 text-white font-medium">
+                      Choose File
+                    </span>
                     <input
-                      type="number"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="$2999"
-                      required
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
                     />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Category
-                    </label>
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                      <option>Select category</option>
-                      <option value="TV">TV/Monitors</option>
-                      <option value="PC">PC</option>
-                      <option value="GA">Gaming/Console</option>
-                      <option value="PH">Phones</option>
-                    </select>
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Product Description
-                    </label>
-                    <textarea
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="Write product description here"
-                      required
-                    ></textarea>
-                  </div>
+                    <span className="px-4 py-2 text-gray-800">
+                      No Chosen File
+                    </span>
+                  </label>
                 </div>
-                <button
-                  type="submit"
-                  className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
-                >
-                  ➕ Add new product
-                </button>
-              </form>
+
+                {/* Form Column */}
+                <div className="flex flex-col space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {/* Product Name */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Product Name
+                        </label>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Enter product name"
+                          className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        />
+                      </div>
+
+                      {/* Warranty */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Warranty
+                        </label>
+                        <input
+                          type="text"
+                          value={warranty}
+                          onChange={(e) => setWarranty(e.target.value)}
+                          placeholder="Enter warranty"
+                          className="w-full bg-white border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        />
+                      </div>
+
+                      {/* Brand */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Brand
+                        </label>
+                        <select
+                          value={brand}
+                          onChange={(e) => setBrand(e.target.value)}
+                          className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        >
+                          <option value="" disabled>
+                            Select a Brand
+                          </option>
+                          {brands.length > 0 ? (
+                            brands.map((productBrand) => (
+                              <option
+                                key={productBrand._id}
+                                value={productBrand.name}
+                              >
+                                {productBrand.name}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled className="text-red-500">
+                              No brands available
+                            </option>
+                          )}
+                        </select>
+                      </div>
+
+                      {/* Category */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Category
+                        </label>
+                        <select
+                          value={category}
+                          onChange={(e) => setCategory(e.target.value)}
+                          className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        >
+                          <option value="" disabled>
+                            Select Category
+                          </option>
+                          {isCategoryLoad ? (
+                            <option disabled className="text-gray-500">
+                              Loading categories...
+                            </option>
+                          ) : categorys.length > 0 ? (
+                            categorys.map((productCategory) => (
+                              <option
+                                key={productCategory._id}
+                                value={productCategory.name}
+                              >
+                                {productCategory.name}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled className="text-red-500">
+                              No categories available
+                            </option>
+                          )}
+                        </select>
+                      </div>
+
+                      {/* Price */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Price
+                        </label>
+                        <input
+                          type="text"
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                          placeholder="Enter price"
+                          className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        />
+                      </div>
+
+                      {/* Cost Price */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Cost Price
+                        </label>
+                        <input
+                          type="text"
+                          value={cost_price}
+                          onChange={(e) => setCostPrice(e.target.value)}
+                          placeholder="Enter cost price"
+                          className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Supplier
+                      </label>
+                      <select
+                        value={supplier}
+                        onChange={(e) => setSupplier(e.target.value)}
+                        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      >
+                        <option value="" disabled>
+                          Select Supplier
+                        </option>
+                        {isLoadSupplier ? (
+                          <option disabled className="text-gray-500">
+                            Loading categories...
+                          </option>
+                        ) : suppliers.length > 0 ? (
+                          suppliers.map((productsuppliers) => (
+                            <option
+                              key={productsuppliers._id}
+                              value={productsuppliers._id}
+                            >
+                              {productsuppliers.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option disabled className="text-red-500">
+                            No categories available
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                    {/* Product Description */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Product Description
+                      </label>
+                      <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Enter product description"
+                        className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      ></textarea>
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      className="min-w-0 w-full bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                    >
+                      Update Product
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>

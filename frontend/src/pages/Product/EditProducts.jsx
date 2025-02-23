@@ -74,15 +74,14 @@ const EditProducts = () => {
   };
 
   return (
-    <div className="flex   min-h-screen ">
-      <div className=" p-8 w-full max-w-4xl  rounded-lg">
+    <div className="flex min-h-screen">
+      <div className="p-8 w-full max-w-full rounded-lg">
         <h3 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
           Edit Product
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Column */}
           <div className="flex flex-col items-center justify-center">
-            {/* Image Preview */}
             {imagePreview ? (
               <img
                 src={imagePreview}
@@ -94,78 +93,122 @@ const EditProducts = () => {
                 <p className="text-gray-500">No image selected</p>
               </div>
             )}
-            {/* File Input */}
-            <input
-              type="file"
-              onChange={handleFileChange}
-              className="mt-4 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-            />
+            <label className="flex items-center w-full border border-gray-300 rounded-lg overflow-hidden cursor-pointer bg-gray-50">
+              <span className="px-4 py-2 bg-gray-200 text-gray-700 font-medium">
+                change image
+              </span>
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <span className="px-4 py-2 text-gray-600">No Chosen File</span>
+            </label>
           </div>
 
           {/* Form Column */}
           <div className="flex flex-col space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Name and Price */}
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Product Name"
-                  className="border p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                />
-                <input
-                  type="text"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="Price"
-                  className="border p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                />
-                {/* Category and Brand */}
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="border p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                >
-                  <option value="TV">TV/Monitors</option>
-                  <option value="freeze">Freeze</option>
-                  <option value="A.C">A.C</option>
-                  <option value="washing machine">Washing Machine</option>
-                </select>
-                <select
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  className="border p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                >
-                  <option value="Samsung">Samsung</option>
-                  <option value="LG">LG</option>
-                  <option value="Daikin">Daikin</option>
-                  <option value="Sony">Sony</option>
-                </select>
+                {/* Name */}
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Product Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  />
+                </div>
+
+                {/* Price */}
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Price
+                  </label>
+                  <input
+                    type="text"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  />
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Category
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  >
+                    <option value="TV">TV/Monitors</option>
+                    <option value="freeze">Freeze</option>
+                    <option value="A.C">A.C</option>
+                    <option value="washing machine">Washing Machine</option>
+                  </select>
+                </div>
+
+                {/* Brand */}
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Brand
+                  </label>
+                  <select
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  >
+                    <option value="Samsung">Samsung</option>
+                    <option value="LG">LG</option>
+                    <option value="Daikin">Daikin</option>
+                    <option value="Sony">Sony</option>
+                  </select>
+                </div>
+
                 {/* Warranty */}
-                <input
-                  type="text"
-                  value={warranty}
-                  onChange={(e) => setWarranty(e.target.value)}
-                  placeholder="Warranty"
-                  className="border p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                />
-                {/* Stock (disabled) */}
-                <input
-                  type="text"
-                  value={stock}
-                  disabled
-                  placeholder="Stock"
-                  className="border p-4 rounded-lg bg-gray-200 focus:outline-none"
-                />
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Warranty
+                  </label>
+                  <input
+                    type="text"
+                    value={warranty}
+                    onChange={(e) => setWarranty(e.target.value)}
+                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  />
+                </div>
+
+                {/* Stock */}
+                <div>
+                  <label className="block text-gray-700 font-medium">
+                    Stock
+                  </label>
+                  <input
+                    type="text"
+                    value={stock}
+                    disabled
+                    className="border p-4 rounded-lg w-full bg-gray-200 focus:outline-none"
+                  />
+                </div>
               </div>
+
               {/* Product Description */}
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Product Description"
-                className="border p-4 rounded-lg w-full mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-              ></textarea>
+              <div>
+                <label className="block text-gray-700 font-medium">
+                  Product Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="border p-4 rounded-lg w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                ></textarea>
+              </div>
+
               {/* Submit Button */}
               <button
                 type="submit"
