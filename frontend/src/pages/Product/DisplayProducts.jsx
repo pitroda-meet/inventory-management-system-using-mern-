@@ -2,42 +2,74 @@ import { useState } from "react";
 import { useProductContext } from "../../Context/ProductContext";
 import { Link } from "react-router-dom";
 import Loader from "../../Component/Loader";
+import { Button } from "antd";
+import { useCategory } from "../../Context/CategoryContext";
+import { useBrand } from "../../Context/BrandContext";
+import {
+  PlusOutlined,
+  TagsOutlined,
+  AppstoreAddOutlined,
+} from "@ant-design/icons";
 
 const DisplayProducts = () => {
-  const { products, isLoading } = useProductContext();
-  if (isLoading) {
-    return <Loader />;
-  }
+  const { products, isLoading, setIsAddOpen } = useProductContext();
+  const { brands, showBrandModal } = useBrand();
+  const { showModal, categorys } = useCategory();
+
+  if (isLoading) return <Loader />;
+
   return (
-    <>
-      {" "}
-      <div className="overflow-x-auto shadow-md sm:rounded-lg mb-6">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+    <div className="p-6 max-w-screen-xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3 w-full">
+        <div className="flex flex-wrap gap-3 justify-center md:justify-start w-full md:w-auto">
+          <Button type="primary" icon={<TagsOutlined />} onClick={showModal}>
+            Add Category
+          </Button>
+          <Button
+            type="primary"
+            icon={<AppstoreAddOutlined />}
+            onClick={showBrandModal}
+          >
+            Add Brand
+          </Button>
+        </div>
+        <div className="w-full md:w-auto flex justify-center md:justify-end">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setIsAddOpen(true)}
+            className="w-full md:w-auto"
+          >
+            Add New Product
+          </Button>
+        </div>
+      </div>
+
+      {/* Products Table */}
+      <div className="overflow-x-auto  rounded-lg p-4 mb-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Products</h2>
+        <table className="w-full text-sm text-left border-collapse bg-white shadow-md">
+          <thead className="text-xs uppercase bg-white text-gray-800">
             <tr>
-              <th className="px-6 py-3">Name</th>
-              <th className="px-6 py-3">Price</th>
-              <th className="px-6 py-3">Category</th>
-              <th className="px-6 py-3">Description</th>
-              <th className="px-6 py-3">action</th>
+              <th className="px-6 py-3 border">Name</th>
+              <th className="px-6 py-3 border">Price</th>
+              <th className="px-6 py-3 border">Category</th>
+              <th className="px-6 py-3 border">Description</th>
+              <th className="px-6 py-3 border">Action</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(products) && products.length > 0 ? (
-              products.map((product) => (
-                <tr
-                  key={product._id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <td className="px-6 py-4">{product.name}</td>
-                  <td className="px-6 py-4">{product.price}</td>
-                  <td className="px-6 py-4">{product.category}</td>
-                  <td className="px-6 py-4">{product.description}</td>
-                  <td>
+            {products.length > 0 ? (
+              products.map((product, index) => (
+                <tr key={product._id} className={"bg-white"}>
+                  <td className="px-6 py-4 border">{product.name}</td>
+                  <td className="px-6 py-4 border">${product.price}</td>
+                  <td className="px-6 py-4 border">{product.category}</td>
+                  <td className="px-6 py-4 border">{product.description}</td>
+                  <td className="px-6 py-4 border">
                     <Link
                       to={`/editproduct/${product._id}`}
-                      type="button"
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
                     >
                       Edit
                     </Link>
@@ -46,13 +78,86 @@ const DisplayProducts = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>No products available</td>
+                <td colSpan={5} className="px-6 py-4 text-center border">
+                  No products available
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-    </>
+
+      {/* Brands & Categories Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Brands Table */}
+        <div className="overflow-x-auto  p-4">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Brands</h2>
+          <table className="w-full text-sm text-left border-collapse bg-white shadow-md rounded-lg">
+            <thead className="text-xs uppercase bg-white text-gray-800">
+              <tr>
+                <th className="px-6 py-3 border">Name</th>
+                <th className="px-6 py-3 border">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {brands.length > 0 ? (
+                brands.map((brand, index) => (
+                  <tr key={brand._id} className={"bg-white"}>
+                    <td className="px-6 py-4 border">{brand.name}</td>
+                    <td className="px-6 py-4 border">
+                      <button className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={2} className="px-6 py-4 text-center border">
+                    No brands available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Categories Table */}
+        <div className="overflow-x-auto  p-4">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Categories
+          </h2>
+          <table className="w-full text-sm text-left border-collapse bg-white shadow-md rounded-lg">
+            <thead className="text-xs uppercase bg-white text-gray-800">
+              <tr>
+                <th className="px-6 py-3 border">Name</th>
+                <th className="px-6 py-3 border">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categorys.length > 0 ? (
+                categorys.map((category, index) => (
+                  <tr key={category._id} className={"bg-white"}>
+                    <td className="px-6 py-4 border">{category.name}</td>
+                    <td className="px-6 py-4 border">
+                      <button className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={2} className="px-6 py-4 text-center border">
+                    No categories available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

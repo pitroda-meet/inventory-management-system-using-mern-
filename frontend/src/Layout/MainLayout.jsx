@@ -171,7 +171,7 @@ const MainLayout = () => {
       <main className="flex-1 bg-neutral-50 overflow-y-auto md:ml-60 lg:ml-0 md:mt-0">
         {/* Fixed Navigation Bar */}
         <div className="hidden md:flex fixed top-0 left-0 w-full h-15 shadow-md bg-white items-center justify-end px-6 z-10">
-          <NavLink>
+          <NavLink to="/cart">
             <FontAwesomeIcon icon={faShoppingCart} />
           </NavLink>
         </div>

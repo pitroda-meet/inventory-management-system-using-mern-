@@ -1,12 +1,48 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const CategoryContext = createContext(undefined);
 
 export const CategoryProvider = ({ children }) => {
   const [categorys, setCategory] = useState([]);
   const [isCategoryLoad, setIsCategoryLoad] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
 
+  const addcategory = async (category) => {
+    setIsCategoryLoad(true);
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/category/newcategory`,
+
+        category,
+        // { withCredentials: true },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data && response.data.category) {
+        setCategory(response.data.category);
+
+        fetchCategory();
+
+        setIsCategoryLoad(false);
+        setIsModalOpen(false);
+        toast.success(response.data.message);
+      } else {
+        console.error("Unexpected server response:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error.response?.data || error);
+    } finally {
+      setIsCategoryLoad(false);
+    }
+  };
   const fetchCategory = async () => {
     try {
       setIsCategoryLoad(true);
@@ -24,7 +60,16 @@ export const CategoryProvider = ({ children }) => {
     fetchCategory();
   }, []);
   return (
-    <CategoryContext.Provider value={{ categorys, isCategoryLoad }}>
+    <CategoryContext.Provider
+      value={{
+        categorys,
+        isCategoryLoad,
+        isModalOpen,
+        setIsModalOpen,
+        showModal,
+        addcategory,
+      }}
+    >
       {children}
     </CategoryContext.Provider>
   );

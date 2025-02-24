@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
 } from "react-router-dom";
@@ -10,10 +11,11 @@ import Signin from "../pages/Authenthication/Signin";
 import ProtectedRoute from "./ProtectedRoute";
 import ProductsManagement from "../pages/Product/ProductsManagement";
 import EditProducts from "../pages/Product/EditProducts";
-import SalesOrder from "../pages/SalesOrder";
 import Customers from "../pages/Customers";
 import Suppliers from "../pages/Suppliers";
-import Invoice from "../pages/Invoice";
+import Invoice from "../pages/Invoice/Invoice";
+import SalesOrder from "../pages/OrderSales/SalesOrderMain";
+import Cart from "../pages/Cart/Cart";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,13 +24,14 @@ const router = createBrowserRouter(
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           <Route path="/productsmanagement" element={<ProductsManagement />} />
           <Route path="/editproduct/:id" element={<EditProducts />} />{" "}
           <Route path="/orders" element={<SalesOrder />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/supplier" element={<Suppliers />} />
           <Route path="/invoice" element={<Invoice />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
       </Route>
     </Route>

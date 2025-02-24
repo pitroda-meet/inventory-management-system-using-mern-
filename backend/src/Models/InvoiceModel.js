@@ -35,12 +35,16 @@ const Invoice = new mongoose.Schema(
           type: Number,
           require: true,
         },
+        discount: {
+          type: Number,
+          default: 0,
+        },
+        FinalPrice: {
+          type: Number,
+          required: true,
+        },
       },
     ],
-    discount: {
-      type: Number,
-      default: 0,
-    },
 
     total_price: {
       type: Number,
