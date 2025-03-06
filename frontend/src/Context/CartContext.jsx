@@ -34,7 +34,10 @@ export const CartContextProvider = ({ children }) => {
       }
     });
   };
-
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
   const updateQuantity = (productId, quantityValue) => {
     setCart((prevCart) =>
       prevCart.map((item) => {
@@ -58,7 +61,13 @@ export const CartContextProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ Cart, addProductCart, updateQuantity, updateDiscount }}
+      value={{
+        Cart,
+        addProductCart,
+        updateQuantity,
+        updateDiscount,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>

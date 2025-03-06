@@ -20,8 +20,15 @@ const Cart = () => {
   return (
     <>
       <Invoice />
+
       <div className="p-6">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Shopping Cart</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-3xl font-bold text-gray-800">Shopping Cart</h2>
+          <Button type="primary" onClick={showInvoiceModal}>
+            Generate Invoice
+          </Button>
+        </div>
+
         {Cart.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse rounded-lg shadow-md overflow-hidden bg-white">
@@ -101,9 +108,6 @@ const Cart = () => {
         ) : (
           <p className="text-gray-500 text-center mt-4">Your cart is empty.</p>
         )}
-        <Button type="primary" onClick={showInvoiceModal}>
-          Generate Invoice
-        </Button>
       </div>
     </>
   );
