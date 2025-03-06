@@ -30,6 +30,7 @@ app.use("/api/supplier", routes.SupplierRoutes);
 app.use("/api/stock", routes.StockRoutes);
 app.use("/api/category", routes.CategoryRoutes);
 app.use("/api/brand", routes.BrandRoutes);
+app.use("/api/invoice", routes.InvoiceRoute);
 mongodbCon();
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

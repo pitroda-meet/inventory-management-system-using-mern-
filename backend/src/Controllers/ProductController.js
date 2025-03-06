@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import ProductModel from "../Models/ProductModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import Stock from "../Models/StockModel.js";
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -113,8 +114,16 @@ export const deleteProduct = expressAsyncHandler(async (req, res) => {
 });
 
 export const updateProduct = expressAsyncHandler(async (req, res) => {
-  const { name, description, category, brand, supplier_id, warranty, price } =
-    req.body;
+  const {
+    name,
+    description,
+    category,
+    brand,
+    supplier_id,
+    warranty,
+    price,
+    cost_price,
+  } = req.body;
   const id = req.params.id;
 
   try {
@@ -123,6 +132,11 @@ export const updateProduct = expressAsyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    const stock = await Stock.findOne({ product_id: id });
+    if (stock) {
+      stock.purchase_price = cost_price;
+      await stock.save();
+    }
     // Handle image deletion and update
     if (req.file) {
       if (product.image_url) {
@@ -154,9 +168,11 @@ export const updateProduct = expressAsyncHandler(async (req, res) => {
     if (warranty) product.warranty = warranty;
     if (supplier_id) product.supplier_id = supplier_id;
     if (price) product.price = price;
+    if (cost_price) product.cost_price = cost_price;
 
     // Save updated product
     const updatedProduct = await product.save();
+
     res
       .status(200)
       .json({ message: "Product updated successfully", updatedProduct });

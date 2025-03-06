@@ -8,17 +8,22 @@ import {
 } from "../Controllers/ProductController.js";
 import { upload } from "../middlewares/cloudinary.js"; // Import the middleware
 import { admin, protect, both } from "../middlewares/protect.js";
+import { updateStockMiddleware } from "../Controllers/StockContoller.js";
 
 const router = express.Router();
 
 router.get(
   "/getproducts",
   // protect, both,
+  updateStockMiddleware,
+
   getAllProducts
 );
 router.get(
   "/getproductid/:id",
   // protect, both,
+  updateStockMiddleware,
+
   getProductById
 );
 router.post(
