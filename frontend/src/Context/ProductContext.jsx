@@ -38,6 +38,9 @@ export const ProductProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   const getProductById = async (productId) => {
     setIsLoading(true);
     try {
@@ -121,13 +124,11 @@ export const ProductProvider = ({ children }) => {
     setProducts(products.filter((product) => product._id !== productId));
   };
 
-  useEffect(() => {
-    fetchProduct();
-  }, []);
   return (
     <ProductContext.Provider
       value={{
         products,
+        fetchProduct,
         isLoading,
         pagination,
         setPagination,

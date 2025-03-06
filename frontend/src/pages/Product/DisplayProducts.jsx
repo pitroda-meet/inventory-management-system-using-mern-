@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProductContext } from "../../Context/ProductContext";
 import { Link } from "react-router-dom";
 import Loader from "../../Component/Loader";
@@ -12,7 +12,8 @@ import {
 } from "@ant-design/icons";
 
 const DisplayProducts = () => {
-  const { products, isLoading, setIsAddOpen } = useProductContext();
+  const { products, isLoading, setIsAddOpen, fetchProduct } =
+    useProductContext();
   const { brands, showBrandModal } = useBrand();
   const { showModal, categorys } = useCategory();
 

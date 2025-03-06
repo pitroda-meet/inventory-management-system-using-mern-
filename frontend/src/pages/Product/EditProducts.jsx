@@ -91,7 +91,7 @@ const EditProducts = () => {
         <h3 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
           Edit Product
         </h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-8">
           {/* Image Column */}
           <div className="flex flex-col items-center justify-center">
             {imagePreview ? (
@@ -120,43 +120,57 @@ const EditProducts = () => {
 
           {/* Form Column */}
           <div className="flex flex-col space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Name */}
-                <div>
-                  <label className="block text-gray-700 font-medium">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Grid Layout for Inputs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Product Name */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">
                     Product Name
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                    className="border p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   />
                 </div>
 
-                {/* Price */}
-                <div>
-                  <label className="block text-gray-700 font-medium">
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                  />
+                {/* Brand */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Brand</label>
+                  <select
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    className="border bg-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
+                    <option value="" disabled>
+                      Select a Brand
+                    </option>
+                    {brands.length > 0 ? (
+                      brands.map((productBrand) => (
+                        <option
+                          key={productBrand._id}
+                          value={productBrand.name}
+                        >
+                          {productBrand.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled className="text-red-500">
+                        No brands available
+                      </option>
+                    )}
+                  </select>
                 </div>
 
                 {/* Category */}
-                <div>
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Category
-                  </label>
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="border bg-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   >
                     <option value="" disabled>
                       Select Category
@@ -181,110 +195,103 @@ const EditProducts = () => {
                     )}
                   </select>
                 </div>
-                {/* Brand */}
-                <div>
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Brand
-                  </label>
-                  <select
-                    value={brand}
-                    onChange={(e) => setBrand(e.target.value)}
-                    className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  >
-                    <option value="" disabled>
-                      Select a Brand
-                    </option>
-                    {brands.length > 0 ? (
-                      brands.map((productBrand) => (
-                        <option
-                          key={productBrand._id}
-                          value={productBrand.name}
-                        >
-                          {productBrand.name}
-                        </option>
-                      ))
-                    ) : (
-                      <option disabled className="text-red-500">
-                        No brands available
-                      </option>
-                    )}
-                  </select>
+
+                {/* Price */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Price</label>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="border p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  />
                 </div>
 
-                {/* Warranty */}
-                <div>
-                  <label className="block text-gray-700 font-medium">
-                    Warranty
+                {/* Cost Price */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">
+                    Cost Price
                   </label>
                   <input
-                    type="text"
-                    value={warranty}
-                    onChange={(e) => setWarranty(e.target.value)}
-                    className="border p-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                    type="number"
+                    value={cost_price}
+                    disabled
+                    onChange={(e) => setCostPrice(e.target.value)}
+                    className="border p-3 rounded-lg w-full bg-gray-200 focus:outline-none"
                   />
                 </div>
 
                 {/* Stock */}
-                <div>
-                  <label className="block text-gray-700 font-medium">
-                    Stock
-                  </label>
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Stock</label>
                   <input
-                    type="text"
+                    type="number"
                     value={stock}
                     disabled
-                    className="border p-4 rounded-lg w-full bg-gray-200 focus:outline-none"
+                    className="border p-3 rounded-lg w-full bg-gray-200 focus:outline-none"
                   />
                 </div>
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Supplier
-                </label>
-                <select
-                  value={supplier}
-                  onChange={(e) => setSupplier(e.target.value)}
-                  className="w-full bg-white border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                >
-                  <option value="" disabled>
-                    Select Supplier
-                  </option>
-                  {isLoadSupplier ? (
-                    <option disabled className="text-gray-500">
-                      Loading categories...
+
+                {/* Warranty */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Warranty</label>
+                  <input
+                    type="text"
+                    value={warranty}
+                    onChange={(e) => setWarranty(e.target.value)}
+                    className="border p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  />
+                </div>
+
+                {/* Supplier */}
+                <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">Supplier</label>
+                  <select
+                    value={supplier}
+                    onChange={(e) => setSupplier(e.target.value)}
+                    className="border bg-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
+                    <option value="" disabled>
+                      Select Supplier
                     </option>
-                  ) : suppliers.length > 0 ? (
-                    suppliers.map((productsuppliers) => (
-                      <option
-                        key={productsuppliers._id}
-                        value={productsuppliers._id}
-                      >
-                        {productsuppliers.name}
+                    {isLoadSupplier ? (
+                      <option disabled className="text-gray-500">
+                        Loading suppliers...
                       </option>
-                    ))
-                  ) : (
-                    <option disabled className="text-red-500">
-                      No categories available
-                    </option>
-                  )}
-                </select>
+                    ) : suppliers.length > 0 ? (
+                      suppliers.map((productsuppliers) => (
+                        <option
+                          key={productsuppliers._id}
+                          value={productsuppliers._id}
+                        >
+                          {productsuppliers.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled className="text-red-500">
+                        No suppliers available
+                      </option>
+                    )}
+                  </select>
+                </div>
               </div>
-              {/* Product Description */}
-              <div>
-                <label className="block text-gray-700 font-medium">
+
+              {/* Product Description (Full Width) */}
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium">
                   Product Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="border p-4 rounded-lg w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                  className="border p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 ></textarea>
               </div>
 
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                className="w-full mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               >
                 Update Product
               </button>

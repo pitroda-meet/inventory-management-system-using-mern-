@@ -16,6 +16,9 @@ import Suppliers from "../pages/Suppliers";
 import Invoice from "../pages/Invoice/Invoice";
 import SalesOrder from "../pages/OrderSales/SalesOrderMain";
 import Cart from "../pages/Cart/Cart";
+import InvoiceMain from "../pages/Invoice/InvoiceMain";
+import InvoiceDetails from "../pages/Invoice/InvoiceDetails";
+import Stock from "../pages/Stock/Stock";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,7 +33,9 @@ const router = createBrowserRouter(
           <Route path="/orders" element={<SalesOrder />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/supplier" element={<Suppliers />} />
-          <Route path="/invoice" element={<Invoice />} />
+          <Route path="/invoice" element={<InvoiceMain />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/invoicedetails/:id" element={<InvoiceDetails />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
       </Route>
