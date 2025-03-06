@@ -12,7 +12,7 @@ const Invoice = new mongoose.Schema(
       require: true,
     },
     phone: {
-      type: Number,
+      type: String,
       require: true,
       minlength: 10,
       maxlength: 10,
@@ -22,7 +22,8 @@ const Invoice = new mongoose.Schema(
       require: true,
     },
     address: {
-      String: true,
+      type: String, // ✅ Corrected here
+      required: true, // Added required validation
     },
     products: [
       {
@@ -31,9 +32,13 @@ const Invoice = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        price: {
+          type: Number,
+          required: true,
+        },
         quantity: {
           type: Number,
-          require: true,
+          required: true,
         },
         discount: {
           type: Number,
@@ -53,3 +58,7 @@ const Invoice = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+const InvoiceModel = mongoose.model("Invoice", Invoice);
+
+export default InvoiceModel;

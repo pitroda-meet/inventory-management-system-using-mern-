@@ -2,19 +2,21 @@ import React from "react";
 import { Button, Modal, Form, Input, Typography, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useInvoice } from "../../Context/InoviceContext";
-
+import { useNavigate } from "react-router-dom";
 const { Title } = Typography;
 
 const Invoice = () => {
   const { createInvoice, isOpenCartModel, setisOpenCartModel } = useInvoice();
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   const handleCancel = () => {
     setisOpenCartModel(false);
     form.resetFields();
   };
   const onFinish = async (values) => {
-    // await createInvoice(values);
+    await createInvoice(values, navigate);
+    setisOpenCartModel(false);
+
     form.resetFields();
     console.log("Success:", values);
   };
@@ -25,7 +27,7 @@ const Invoice = () => {
   return (
     <>
       <Modal
-        title={<Title level={4}>Add New Brand</Title>}
+        title={<Title level={4}> fill up the Customer's information</Title>}
         open={isOpenCartModel}
         onCancel={handleCancel}
         footer={null}
@@ -50,10 +52,14 @@ const Invoice = () => {
             <Input placeholder="Enter customer name" />
           </Form.Item>
           <Form.Item
-            label={<strong>phone number</strong>}
+            label={<strong>Phone Number</strong>}
             name="phone"
             rules={[
               { required: true, message: "Please input your phone number!" },
+              {
+                pattern: /^[0-9]{10}$/, // Ensures exactly 10 digits
+                message: "Please enter a valid 10-digit phone number!",
+              },
             ]}
           >
             <Input placeholder="Enter phone number" />
