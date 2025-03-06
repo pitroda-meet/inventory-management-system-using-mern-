@@ -1,9 +1,14 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import Loader from "../../Component/Loader";
 import { useCartContext } from "../../Context/CartContext";
 import { useProductContext } from "../../Context/ProductContext";
+import { useEffect } from "react";
 
 const SalesOrder = () => {
-  const { products, isLoading } = useProductContext();
+  const { products, isLoading, fetchProduct } = useProductContext();
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   const { Cart, addProductCart } = useCartContext();
   if (isLoading) return <Loader />;
 
@@ -43,7 +48,8 @@ const SalesOrder = () => {
                       ₹{product.price}
                     </span>
                   </p>
-                  <button
+                  <NavLink
+                    to={"/cart"}
                     className="flex items-center justify-center rounded-md bg-slate-900 px-3 py-2 md:px-4 md:py-3 lg:px-5 lg:py-4 text-center text-xs md:text-sm lg:text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
                     onClick={() => addProductCart(product)}
                   >
@@ -62,7 +68,7 @@ const SalesOrder = () => {
                       />
                     </svg>
                     {/* Add to cart */}
-                  </button>
+                  </NavLink>
                 </div>
 
                 {/* Brand & Category */}
