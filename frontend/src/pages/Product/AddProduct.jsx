@@ -12,12 +12,9 @@ const AddProduct = () => {
   const { suppliers, isLoadSupplier } = useSupplier();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [cost_price, setCostPrice] = useState("");
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
   const [warranty, setWarranty] = useState("");
-  const [stock, setStock] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const navigate = useNavigate();
@@ -35,6 +32,16 @@ const AddProduct = () => {
       reader.readAsDataURL(file);
     }
   };
+  const resetForm = () => {
+    setName("");
+    setDescription("");
+    setCategory("");
+    setBrand("");
+    setWarranty("");
+    setImageFile(null);
+    setImagePreview("");
+    setSupplier("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,8 +49,8 @@ const AddProduct = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
-    formData.append("price", price);
-    formData.append("cost_price", cost_price);
+    // formData.append("price", price);
+    // formData.append("cost_price", cost_price);
     formData.append("category", category);
     formData.append("brand", brand);
     formData.append("warranty", warranty);
@@ -72,7 +79,10 @@ const AddProduct = () => {
                   Create New Product
                 </h3>
                 <button
-                  onClick={() => setIsAddOpen(false)}
+                  onClick={() => {
+                    setIsAddOpen(false);
+                    resetForm();
+                  }}
                   className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                   ✖
@@ -205,17 +215,17 @@ const AddProduct = () => {
                         </select>
                       </div>
 
-                      {/* Price */}
+                      {/*  Price */}
                       <div>
                         <label className="block text-gray-700 font-medium mb-2">
                           Price
                         </label>
                         <input
                           type="text"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
-                          placeholder="Enter price"
+                          value="by default 0"
+                          placeholder="by default 0 price "
                           className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                          disabled
                         />
                       </div>
 
@@ -226,10 +236,10 @@ const AddProduct = () => {
                         </label>
                         <input
                           type="text"
-                          value={cost_price}
-                          onChange={(e) => setCostPrice(e.target.value)}
-                          placeholder="Enter cost price"
+                          value="by default 0"
+                          placeholder="by default 0 cost_price "
                           className="w-full border bg-white border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                          disabled
                         />
                       </div>
                     </div>

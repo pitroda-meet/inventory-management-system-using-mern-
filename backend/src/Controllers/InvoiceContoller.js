@@ -46,7 +46,7 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
         const stockEntry = await StockModel.findOne({
           product_id: item._id,
           isactiveinproduct: true,
-        }).sort({ createdAt: -1 }); // Get the latest stock entry
+        }); // Get the latest stock entry
 
         if (stockEntry) {
           stockEntry.remaning_quantity -= item.quantity;
@@ -56,6 +56,7 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
         return {
           product_id: item._id, // 🔥 Ensure correct field name
           price: item.price,
+          stock_id: stockEntry._id,
           quantity: item.quantity,
           discount: item.discount || 0,
           FinalPrice: (item.price - (item.discount || 0)) * item.quantity,

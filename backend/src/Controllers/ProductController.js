@@ -24,24 +24,14 @@ export const getAllProducts = async (req, res) => {
   }
 };
 export const uploadProduct = expressAsyncHandler(async (req, res, next) => {
-  const {
-    name,
-    description,
-    category,
-    brand,
-    price,
-    cost_price,
-    warranty,
-    supplier_id,
-  } = req.body;
+  const { name, description, category, brand, warranty, supplier_id } =
+    req.body;
 
   if (
     !name ||
     !description ||
     !category ||
     !brand ||
-    !price ||
-    !cost_price ||
     !warranty ||
     !supplier_id ||
     !req.file
@@ -61,8 +51,6 @@ export const uploadProduct = expressAsyncHandler(async (req, res, next) => {
       description,
       category,
       brand,
-      price,
-      cost_price,
       warranty,
       supplier_id,
       image_url: req.file.path,
@@ -114,16 +102,8 @@ export const deleteProduct = expressAsyncHandler(async (req, res) => {
 });
 
 export const updateProduct = expressAsyncHandler(async (req, res) => {
-  const {
-    name,
-    description,
-    category,
-    brand,
-    supplier_id,
-    warranty,
-    price,
-    cost_price,
-  } = req.body;
+  const { name, description, category, brand, supplier_id, warranty, price } =
+    req.body;
   const id = req.params.id;
 
   try {
@@ -168,7 +148,6 @@ export const updateProduct = expressAsyncHandler(async (req, res) => {
     if (warranty) product.warranty = warranty;
     if (supplier_id) product.supplier_id = supplier_id;
     if (price) product.price = price;
-    if (cost_price) product.cost_price = cost_price;
 
     // Save updated product
     const updatedProduct = await product.save();

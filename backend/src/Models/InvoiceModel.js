@@ -40,6 +40,12 @@ const Invoice = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        stock_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Stock",
+          required: true,
+        },
+
         discount: {
           type: Number,
           default: 0,

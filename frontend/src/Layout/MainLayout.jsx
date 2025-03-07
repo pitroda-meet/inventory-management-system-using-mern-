@@ -10,6 +10,7 @@ import {
   faUsers,
   faClose,
   faBars,
+  faBoxesStacked,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -99,7 +100,20 @@ const MainLayout = () => {
                 <FontAwesomeIcon icon={faFileInvoiceDollar} />
                 Orders & Sales
               </NavLink>
-
+              <NavLink
+                to="/stock"
+                onClick={toggleSidebar}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 py-2 px-4 rounded ${
+                    isActive
+                      ? "text-blue-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  } transition-colors duration-200 font-semibold`
+                }
+              >
+                <FontAwesomeIcon icon={faBoxesStacked} />
+                stock
+              </NavLink>
               <NavLink
                 to="/customers"
                 onClick={toggleSidebar}

@@ -18,6 +18,10 @@ const StockScema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  salling_price: {
+    type: Number,
+    required: true,
+  },
   purchase_quantity: {
     type: Number,
     required: true,
@@ -30,6 +34,7 @@ const StockScema = new mongoose.Schema({
   total_cost: {
     type: Number,
   },
+
   isactiveinproduct: {
     type: Boolean,
     default: false,

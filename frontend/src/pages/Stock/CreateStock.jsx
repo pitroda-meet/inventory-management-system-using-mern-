@@ -100,6 +100,14 @@ const CreateStock = () => {
         >
           <Input type="number" placeholder="Enter purchase price" />
         </Form.Item>
+        {/* Salling Price */}
+        <Form.Item
+          label="Salling Price"
+          name="salling_price"
+          rules={[{ required: true, message: "Please enter salling price!" }]}
+        >
+          <Input type="number" placeholder="Enter salling price" />
+        </Form.Item>
 
         {/* Purchase Quantity */}
         <Form.Item

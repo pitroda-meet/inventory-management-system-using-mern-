@@ -2,7 +2,7 @@ import express from "express";
 import {
   createStock,
   getAllStock,
-  // updatestock,
+  updatestock,
   updateStockMiddleware,
 } from "../Controllers/StockContoller.js";
 import { admin, both, protect } from "../middlewares/protect.js";
@@ -13,11 +13,11 @@ router.post(
   // protect, admin,
   createStock
 );
-// router.patch(
-//   "/updatestck/:id",
-//    protect, admin,
-//   updatestock
-// );
+router.put(
+  "/updatestock/:id",
+  //  protect, admin,
+  updatestock
+);
 
 router.get(
   "/getstock",
