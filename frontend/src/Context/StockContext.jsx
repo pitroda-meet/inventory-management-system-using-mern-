@@ -1,37 +1,40 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 
 export const StockContext = createContext();
 
 export const StockProvider = ({ children }) => {
   const [stock, setStock] = useState([]);
-  const [stockModel, setStockModel] = useState(false);
+  const [stockModel, setStockModel] = useState({ open: false, stock: null });
   const [isStockLoading, setStockLoading] = useState(false);
 
-  const addStock = async (stock) => {
+  // Fixed: Used setStockModel correctly with an object
+  const addStock = async (newStock) => {
     try {
       const response = await axios.post(
         `http://localhost:3000/api/stock/createstock`,
-        stock,
+        newStock,
         {
           headers: {
             "Content-Type": "application/json",
-            // withCredentials: true,
           },
         }
       );
       setStock((prevStock) => [...prevStock, response.data.newstock]);
-      setStockModel(false);
+      setStockModel({ open: false, stock: null });
       getAllStock();
       toast.success(response.data.message);
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to add stock"); // Added better error handling
     } finally {
       setStockLoading(false);
     }
   };
-  const getAllStock = async () => {
+
+  // Wrapped in useCallback to prevent unnecessary re-renders
+  const getAllStock = useCallback(async () => {
     setStockLoading(true);
     try {
       const response = await axios.get(
@@ -39,13 +42,39 @@ export const StockProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            // withCredentials: true,
           },
         }
       );
       setStock(response.data.stocks);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch stock data"); // Added toast error handling
+    } finally {
+      setStockLoading(false);
+    }
+  }, []);
+
+  // Implemented updateStock function
+  const updateStock = async (stockId, updatedStock) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/stock/updatestock/${stockId}`,
+        updatedStock,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      setStock((prevStock) =>
+        prevStock.map((s) =>
+          s._id === stockId ? response.data.updatedStock : s
+        )
+      );
+      setStockModel({ open: false, stock: null });
+      getAllStock();
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update stock"); // Added better error handling
     } finally {
       setStockLoading(false);
     }
@@ -60,6 +89,7 @@ export const StockProvider = ({ children }) => {
         addStock,
         getAllStock,
         isStockLoading,
+        updateStock,
       }}
     >
       {children}

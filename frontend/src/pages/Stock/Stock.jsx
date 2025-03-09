@@ -4,6 +4,7 @@ import { useStock } from "../../Context/StockContext";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateStock from "./CreateStock";
 import StockTable from "./StockTable";
+import UpdateStock from "./UpdateStock";
 
 const { Title } = Typography;
 
@@ -19,13 +20,14 @@ const Stock = () => {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => setStockModel(true)}
+          onClick={() => setStockModel({ open: true, stock: null })}
         >
           Add
         </Button>
       </Flex>
       <StockTable />
       <CreateStock />
+      <UpdateStock />
     </Space>
   );
 };
