@@ -15,7 +15,7 @@ const UserScema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: { type: String, enum: ["Admin", "Staff"], default: "Staff" },
+  role: { type: String, enum: ["Admin", "Staff"], required: true },
 });
 
 UserScema.pre("save", async function (next) {

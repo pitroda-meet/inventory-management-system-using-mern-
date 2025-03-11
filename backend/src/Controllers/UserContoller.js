@@ -2,7 +2,7 @@ import User from "../Models/UserModel.js";
 import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 export const createUser = expressAsyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   try {
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -11,7 +11,7 @@ export const createUser = expressAsyncHandler(async (req, res) => {
     if (existing) {
       return res.status(200).json({ message: "Already existinh user " });
     }
-    const user = new User({ email, password, name });
+    const user = new User({ email, password, name, role });
     await user.save();
     if (user) {
       return res
@@ -41,21 +41,112 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Password is incorrect" });
     }
     const token = user.generateToken();
+
     return res
       .cookie("token", token, {
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
-        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000, // 1 Day
+        httpOnly: true, // Secure cookie
+        sameSite: "lax", // Allow cross-origin auth
       })
       .status(200)
       .json({
+        token,
         message: "Login successful",
-        token: token,
         userId: user._id,
         role: user.role,
       });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
+  }
+});
+
+export const verifyUser = expressAsyncHandler(async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: "Please login to access" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await User.findById(decoded.userId).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User verified",
+      userId: user._id,
+      role: user.role,
+    });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
+});
+
+export const getAllUser = expressAsyncHandler(async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+export const logoutUser = expressAsyncHandler(async (req, res) => {
+  res
+    .cookie("token", "", {
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: "lax",
+    })
+    .status(200)
+    .json({ message: "Logout successful" });
+});
+
+export const updateUser = expressAsyncHandler(async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { role } = req.body;
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    if (!role) {
+      return res.status(400).json({ message: "Role is required" });
+    }
+
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.role = role;
+    await user.save();
+    return res.status(200).json({ message: "User updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const deleteuser = expressAsyncHandler(async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const result = await User.deleteOne({ _id: id });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });

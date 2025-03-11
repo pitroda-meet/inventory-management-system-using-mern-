@@ -19,11 +19,12 @@ import Cart from "../pages/Cart/Cart";
 import InvoiceMain from "../pages/Invoice/InvoiceMain";
 import InvoiceDetails from "../pages/Invoice/InvoiceDetails";
 import Stock from "../pages/Stock/Stock";
+import UserMain from "../pages/Authenthication/UserMain";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index path="signin" element={<Signin />} />
+      <Route path="signin" element={<Signin />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
           <Route path="/supplier" element={<Suppliers />} />
           <Route path="/invoice" element={<InvoiceMain />} />
           <Route path="/stock" element={<Stock />} />
+          <Route path="/user" element={<UserMain />} />
           <Route path="/invoicedetails/:id" element={<InvoiceDetails />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
