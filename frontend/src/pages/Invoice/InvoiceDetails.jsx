@@ -28,9 +28,8 @@ const InvoiceDetails = () => {
     0
   );
 
-  if (isLoadInvoice) {
-    return "Loading...";
-  }
+  if (isLoadInvoice) return <Loader />;
+
   const totalRows = 15;
   // const emptyRows = totalRows - items.length;
 

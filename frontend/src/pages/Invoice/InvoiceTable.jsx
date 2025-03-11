@@ -3,6 +3,7 @@ import { Table, Space } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useInvoice } from "../../Context/InoviceContext";
 import { Link } from "react-router-dom";
+import Loader from "../../Component/Loader";
 
 const InvoiceTable = ({ searchText = "" }) => {
   const { Invoice, isLoadInvoice, getInvoice } = useInvoice();
@@ -10,8 +11,7 @@ const InvoiceTable = ({ searchText = "" }) => {
   useEffect(() => {
     getInvoice();
   }, []);
-  if (isLoadInvoice) return "Loading...";
-
+  if (isLoadInvoice) return <Loader />;
   const columns = [
     {
       title: "Invoice ID",

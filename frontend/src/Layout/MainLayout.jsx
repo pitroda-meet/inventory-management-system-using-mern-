@@ -15,10 +15,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 //
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useUser } from "../Context/UserContext";
 
 const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const { logoutUser } = useUser();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((isSidebarOpen) => !isSidebarOpen);
@@ -113,6 +117,20 @@ const MainLayout = () => {
               >
                 <FontAwesomeIcon icon={faBoxesStacked} />
                 stock
+              </NavLink>{" "}
+              <NavLink
+                to="/user"
+                onClick={toggleSidebar}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 py-2 px-4 rounded ${
+                    isActive
+                      ? "text-blue-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  } transition-colors duration-200 font-semibold`
+                }
+              >
+                <FontAwesomeIcon icon={faUsers} />
+                user
               </NavLink>
               <NavLink
                 to="/customers"
@@ -128,7 +146,6 @@ const MainLayout = () => {
                 <FontAwesomeIcon icon={faUsers} />
                 Customers
               </NavLink>
-
               <NavLink
                 to="/supplier"
                 onClick={toggleSidebar}
@@ -159,7 +176,7 @@ const MainLayout = () => {
               </NavLink>
               <NavLink
                 to="/logout"
-                onClick={toggleSidebar}
+                onClick={() => logoutUser(navigate)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 py-2 px-4 rounded ${
                     isActive
