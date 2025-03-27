@@ -9,4 +9,7 @@ export default defineConfig({
     port: process.env.PORT || 4173,
     host: "0.0.0.0",
   },
+  preview: {
+    allowedHosts: ["inventory-management-system-c0nx.onrender.com"],
+  },
 });
