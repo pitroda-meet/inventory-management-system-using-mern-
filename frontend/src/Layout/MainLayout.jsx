@@ -49,7 +49,7 @@ const MainLayout = () => {
             <div className="flex justify-between shadow-sm p-4 py-2 md:py-4 gap-3 items-center">
               <div className="w-full md:text-xl font-semibold px-4">
                 <div>
-                  Venture <span className="text-blue-500">Connect</span>
+                  Electro <span className="text-blue-500">Stock</span>
                 </div>
               </div>
               <button
@@ -63,7 +63,7 @@ const MainLayout = () => {
             {/* Navigation Menu */}
             <nav className="flex flex-col my-4 space-y-2 px-4">
               <NavLink
-                to="/dashboard"
+                to="/"
                 onClick={toggleSidebar}
                 className={({ isActive }) =>
                   `flex items-center gap-3 py-2 px-4 rounded ${
