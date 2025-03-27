@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "npm install && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "npm run preview"
+    "preview": "vite preview --port $PORT --host",
+    "start": "vite --port $PORT --host"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
