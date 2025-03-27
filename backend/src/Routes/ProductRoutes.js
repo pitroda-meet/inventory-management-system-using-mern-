@@ -3,6 +3,7 @@ import {
   deleteProduct,
   getAllProducts,
   getProductById,
+  stocklevel,
   updateProduct,
   uploadProduct,
 } from "../Controllers/ProductController.js";
@@ -40,5 +41,7 @@ router.patch(
   // admin,
   updateProduct
 );
+
+router.get("/stocklevel", stocklevel);
 
 export default router;
