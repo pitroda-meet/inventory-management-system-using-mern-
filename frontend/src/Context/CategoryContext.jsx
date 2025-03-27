@@ -16,7 +16,7 @@ export const CategoryProvider = ({ children }) => {
     setIsCategoryLoad(true);
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/category/newcategory`,
+        `${import.meta.env.VITE_API_URL}/category/newcategory`,
 
         category,
         // { withCredentials: true },
@@ -47,7 +47,7 @@ export const CategoryProvider = ({ children }) => {
     try {
       setIsCategoryLoad(true);
       const response = await axios.get(
-        `http://localhost:3000/api/category/getcategory`
+        `${import.meta.env.VITE_API_URL}/category/getcategory`
       );
       setCategory(response.data.category);
     } catch (error) {

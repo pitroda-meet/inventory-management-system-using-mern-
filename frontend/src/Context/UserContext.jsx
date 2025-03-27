@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/user/createuser",
+        `${import.meta.env.VITE_API_URL}/user/createuser`,
         user,
         {
           headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }) => {
     setUserLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/user/getalluser`,
+        `${import.meta.env.VITE_API_URL}/user/getalluser`,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -81,7 +81,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/user/loginuser",
+        `${import.meta.env.VITE_API_URL}/user/loginuser`,
         data,
         {
           headers: { "Content-Type": "application/json" },
@@ -109,7 +109,7 @@ export const UserProvider = ({ children }) => {
     setUserLoading(true);
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/user/updateuser/${id}`,
+        `${import.meta.env.VITE_API_URL}/user/updateuser/${id}`,
         { role },
         {
           headers: { "Content-Type": "application/json" },
@@ -129,7 +129,7 @@ export const UserProvider = ({ children }) => {
     setUserLoading(true);
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/user/deleteuser/${id}`,
+        `${import.meta.env.VITE_API_URL}/user/deleteuser/${id}`,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -152,7 +152,7 @@ export const UserProvider = ({ children }) => {
     setUserLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/user/logout",
+        `${import.meta.env.VITE_API_URL}/user/logout`,
         {},
         { withCredentials: true }
       );
@@ -172,7 +172,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     loadUserFromLocalStorage();
     getAllUser();
-  }, []);
+  }, [setusers]);
 
   return (
     <UserContext.Provider

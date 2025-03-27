@@ -10,7 +10,7 @@ export const SupplierProvider = ({ children }) => {
       setIsLoadSupplier(true);
 
       const response = await axios.get(
-        `http://localhost:3000/api/supplier/getsupplier`
+        `${import.meta.env.VITE_API_URL}/supplier/getsupplier`
       );
       setSuppliers(response.data.Suppliers || []);
     } catch (error) {

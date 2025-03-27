@@ -13,7 +13,7 @@ export const StockProvider = ({ children }) => {
   const addStock = async (newStock) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/stock/createstock`,
+        `${import.meta.env.VITE_API_URL}/stock/createstock`,
         newStock,
         {
           headers: {
@@ -38,7 +38,7 @@ export const StockProvider = ({ children }) => {
     setStockLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/stock/getstock`,
+        `${import.meta.env.VITE_API_URL}/stock/getstock`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export const StockProvider = ({ children }) => {
   const updateStock = async (stockId, updatedStock) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/stock/updatestock/${stockId}`,
+        `${import.meta.env.VITE_API_URL}/stock/updatestock/${stockId}`,
         updatedStock,
         {
           headers: { "Content-Type": "application/json" },

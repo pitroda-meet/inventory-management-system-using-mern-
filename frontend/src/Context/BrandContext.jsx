@@ -15,7 +15,7 @@ export const BrandProvider = ({ children }) => {
     setIsbrandLoad(true);
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/brand/newBrand`,
+        `${import.meta.env.VITE_API_URL}/brand/newBrand`,
 
         brand,
         // { withCredentials: true },
@@ -46,7 +46,7 @@ export const BrandProvider = ({ children }) => {
     try {
       setIsbrandLoad(true);
       const response = await axios.get(
-        `http://localhost:3000/api/brand/getbrand`
+        `${import.meta.env.VITE_API_URL}/brand/getbrand`
       );
       setBrands(response.data.brands || []);
     } catch (error) {

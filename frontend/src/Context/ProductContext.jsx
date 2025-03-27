@@ -19,7 +19,9 @@ export const ProductProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/product/getproducts?page=${page}&limit=${limit}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/product/getproducts?page=${page}&limit=${limit}`
       );
 
       if (response.data && response.data.products) {
@@ -45,7 +47,7 @@ export const ProductProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/product/getproductid/${productId}`
+        `${import.meta.env.VITE_API_URL}/product/getproductid/${productId}`
       );
       setEditingProduct(response.data.product);
     } catch (error) {
@@ -59,7 +61,7 @@ export const ProductProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/product/uploadproduct",
+        `${import.meta.env.VITE_API_URL}/product/uploadproduct`,
 
         product,
         // { withCredentials: true },
@@ -87,7 +89,7 @@ export const ProductProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/product/updateproduct/${productId}`,
+        `${import.meta.env.VITE_API_URL}/product/updateproduct/${productId}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

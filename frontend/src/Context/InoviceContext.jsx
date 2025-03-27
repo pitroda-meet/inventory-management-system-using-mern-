@@ -20,7 +20,7 @@ export const InvoiceProvider = ({ children }) => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/invoice/getbyidinvoice/${id}`,
+        `${import.meta.env.VITE_API_URL}/invoice/getbyidinvoice/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const InvoiceProvider = ({ children }) => {
     setisLoadInvoice(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/invoice/getinvoices`,
+        `${import.meta.env.VITE_API_URL}/invoice/getinvoices`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export const InvoiceProvider = ({ children }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/invoice/createinvoice",
+        `${import.meta.env.VITE_API_URL}/invoice/createinvoice`,
         invoiceData,
         {
           headers: {
