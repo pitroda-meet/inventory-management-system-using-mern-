@@ -179,3 +179,12 @@ export const getProductById = async (req, res) => {
       .json({ error: "Failed to retrieve product", details: error.message });
   }
 };
+
+export const stocklevel = expressAsyncHandler(async (req, res) => {
+  try {
+    const stocks = await ProductModel.find().select("name stock");
+    res.status(200).json({ stocks });
+  } catch (error) {
+    console.log(error);
+  }
+});
