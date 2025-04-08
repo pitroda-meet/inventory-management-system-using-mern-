@@ -14,11 +14,25 @@ import {
 const DisplayProducts = () => {
   const { products, isLoading, setIsAddOpen, fetchProduct } =
     useProductContext();
-  const { brands, showBrandModal } = useBrand();
-  const { showModal, categorys } = useCategory();
+  const { brands, showBrandModal, deletebrand } = useBrand();
+  const { showModal, categorys, deletecategory } = useCategory();
 
   if (isLoading) return <Loader />;
 
+  const handledeletebrand = async (Id) => {
+    try {
+      await deletebrand(Id);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
+  const handledeletecategory = async (categoryId) => {
+    try {
+      await deletecategory(categoryId);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
   return (
     <div className="p-6 max-w-screen-xl mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3 w-full">
@@ -106,7 +120,10 @@ const DisplayProducts = () => {
                   <tr key={brand._id} className={"bg-white"}>
                     <td className="px-6 py-4 border">{brand.name}</td>
                     <td className="px-6 py-4 border">
-                      <button className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
+                      <button
+                        onClick={() => handledeletebrand(brand._id)}
+                        className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                      >
                         Delete
                       </button>
                     </td>
@@ -141,7 +158,10 @@ const DisplayProducts = () => {
                   <tr key={category._id} className={"bg-white"}>
                     <td className="px-6 py-4 border">{category.name}</td>
                     <td className="px-6 py-4 border">
-                      <button className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
+                      <button
+                        onClick={() => handledeletecategory(category._id)}
+                        className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                      >
                         Delete
                       </button>
                     </td>
