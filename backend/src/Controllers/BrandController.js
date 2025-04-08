@@ -27,3 +27,16 @@ export const getBrand = expressAsyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to get brands" }); // ✅ Fixed error message
   }
 });
+
+export const deleteBrand = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  try {
+    const brand = await BrandModel.findByIdAndDelete(id);
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+    res.status(200).json({ message: "Brand deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting brand:", error.message);
+  }
+});
