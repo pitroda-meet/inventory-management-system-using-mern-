@@ -26,15 +26,6 @@ const SupplierSchemsa = new mongoose.Schema(
       type: String,
       required: true,
     },
-
-    products_supplied: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
-    pending_payment: { type: Number, default: 0 },
-    total_orders: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
