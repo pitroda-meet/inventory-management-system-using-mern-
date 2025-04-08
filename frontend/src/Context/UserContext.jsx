@@ -76,10 +76,8 @@ export const UserProvider = ({ children }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/loginuser`,
         data,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+
+        { withCredentials: true }
       );
 
       if (response.data) {

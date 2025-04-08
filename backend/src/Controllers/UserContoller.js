@@ -46,8 +46,8 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
       .cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000, // 1 Day
         httpOnly: true,
-        sameSite: "lax", // or "none" if cross-site
-        secure: process.env.NODE_ENV === "production", // Important for HTTPS
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        secure: process.env.NODE_ENV === "production",
       })
       .status(200)
       .json({
