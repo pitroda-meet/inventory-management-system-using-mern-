@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const SupplierContext = createContext({});
 export const SupplierProvider = ({ children }) => {
@@ -21,15 +22,12 @@ export const SupplierProvider = ({ children }) => {
     } catch (error) {
       console.log(error.message);
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
       }
     } finally {
       setIsLoadSupplier(false);
     }
   };
-  useEffect(() => {
-    fetchsupplier();
-  }, []);
 
   return (
     <SupplierContext.Provider

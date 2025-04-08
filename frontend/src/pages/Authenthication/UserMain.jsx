@@ -7,14 +7,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import UserAdd from "./UserAdd";
 
 const UserMain = () => {
-  const {
-    users,
-    getAllUser,
-    userLoading,
-    isUserModel,
-    setisUserModel,
-    loadUserFromLocalStorage,
-  } = useUser();
+  const { users, getAllUser, userLoading, isUserModel, setisUserModel } =
+    useUser();
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>

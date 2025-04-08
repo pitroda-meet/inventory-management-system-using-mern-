@@ -5,12 +5,22 @@ import { useProductContext } from "../../Context/ProductContext";
 import Category from "./Category";
 import Brands from "./Brands";
 import { useEffect } from "react";
+import { useCategory } from "../../Context/CategoryContext";
+import { useBrand } from "../../Context/BrandContext";
+import { useUser } from "../../Context/UserContext";
 
 const ProductsManagement = () => {
   const { fetchProduct } = useProductContext();
+  const { fetchCategory } = useCategory();
+  const { fetchbrand } = useBrand();
+  const { userData } = useUser();
   useEffect(() => {
-    fetchProduct();
-  }, []);
+    if (userData.token) {
+      fetchProduct();
+      fetchCategory();
+      fetchbrand();
+    }
+  }, [userData.token]);
   return (
     <div className="justify-center">
       <section className="">

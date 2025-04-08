@@ -10,9 +10,7 @@ const { Title } = Typography;
 
 const Stock = () => {
   const { stockModel, setStockModel, getAllStock } = useStock();
-  useEffect(() => {
-    getAllStock();
-  }, []);
+
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
       <Flex justify="space-between">

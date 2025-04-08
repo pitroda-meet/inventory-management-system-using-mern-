@@ -60,7 +60,7 @@ export const CategoryProvider = ({ children }) => {
     } catch (error) {
       console.log(error.message);
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
         setIsCategoryLoad(false);
         setIsModalOpen(false);
       } else {
@@ -111,6 +111,7 @@ export const CategoryProvider = ({ children }) => {
         setIsModalOpen,
         showModal,
         addcategory,
+        fetchCategory,
       }}
     >
       {children}

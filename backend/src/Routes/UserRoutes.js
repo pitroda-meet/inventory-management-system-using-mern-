@@ -22,5 +22,5 @@ router.get(
 router.patch("/updateuser/:id", protect, authorizeRoles("Admin"), updateUser);
 router.delete("/deleteuser/:id", protect, authorizeRoles("Admin"), deleteuser);
 
-router.post("/logout", protect, authorizeRoles("Admin", "Staff"), logoutUser);
+router.post("/logout", logoutUser);
 export default router;

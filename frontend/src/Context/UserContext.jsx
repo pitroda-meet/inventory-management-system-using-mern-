@@ -5,10 +5,16 @@ import { toast } from "react-toastify";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
+  // Initialize userData directly from localStorage
+  const [userData, setUserData] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  const [userLoading, setUserLoading] = useState(false);
   const [users, setusers] = useState([]);
   const [isUserModel, setisUserModel] = useState(false);
+
   const saveUserToLocalStorage = (user) => {
     localStorage.setItem("user", JSON.stringify(user));
   };
@@ -17,53 +23,31 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
-  const loadUserFromLocalStorage = () => {
-    setUserLoading(true);
-
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUserData(JSON.parse(storedUser));
-    }
-    setUserLoading(false);
-  };
-
   const createUser = async (user) => {
     setUserLoading(true);
-
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/createuser`,
         user,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       if (response.data?.user) {
-        setusers((prevuser) => [...prevuser, response.data.user]);
+        setusers((prev) => [...prev, response.data.user]);
         toast.success(response.data.message);
         setisUserModel(false);
-        getAllUser();
+        await getAllUser();
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-        setisUserModel(false);
-        setUserLoading(false);
-      } else {
-        toast.error("Error creating user");
-        setisUserModel(false);
-      }
+      toast.error(error.response?.data?.message || "Error creating user");
+      setisUserModel(false);
     } finally {
-      setUserLoading(false);
       setUserLoading(false);
     }
   };
-
-  //  getalluser
 
   const getAllUser = async () => {
     setUserLoading(true);
@@ -80,20 +64,14 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-        setUserLoading(false);
-      } else {
-        toast.error("Error fetching users");
-        setUserLoading(false);
-      }
+      toast.error(error.response?.data?.message || "Error fetching users");
     } finally {
       setUserLoading(false);
     }
   };
+
   const LoginUser = async (data, navigate) => {
     setUserLoading(true);
-
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/loginuser`,
@@ -114,11 +92,7 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Login failed");
-      }
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setUserLoading(false);
     }
@@ -135,18 +109,11 @@ export const UserProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      if (response.data) {
-        toast.success(response.data.message);
-      }
-      getAllUser();
+      toast.success(response.data.message);
+      await getAllUser();
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-        setUserLoading(false);
-      } else {
-        toast.error("Error updating user role");
-      }
+      toast.error(error.response?.data?.message || "Error updating user role");
     } finally {
       setUserLoading(false);
     }
@@ -162,18 +129,11 @@ export const UserProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-
-      if (response.data) {
-        toast.success(response.data.message);
-        getAllUser(); // Refresh user list
-      }
+      toast.success(response.data.message);
+      await getAllUser();
     } catch (error) {
       console.error("Error deleting user:", error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Error deleting user");
-      }
+      toast.error(error.response?.data?.message || "Error deleting user");
     } finally {
       setUserLoading(false);
     }
@@ -187,28 +147,22 @@ export const UserProvider = ({ children }) => {
         {},
         { withCredentials: true }
       );
-
       setUserData(null);
       removeUserFromLocalStorage();
       toast.success(response.data.message);
       navigate("/signin");
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Logout failed");
-      }
-      toast.error("Logout failed");
+      toast.error(error.response?.data?.message || "Logout failed");
     } finally {
       setUserLoading(false);
     }
   };
-
   useEffect(() => {
-    loadUserFromLocalStorage();
-    getAllUser();
-  }, [setusers]);
+    if (userData) {
+      getAllUser();
+    }
+  }, [userData]);
 
   return (
     <UserContext.Provider
@@ -222,9 +176,10 @@ export const UserProvider = ({ children }) => {
         getAllUser,
         isUserModel,
         setisUserModel,
-        loadUserFromLocalStorage,
         updateroll,
+        setusers,
         deleteuser,
+        // Removed loadUserFromLocalStorage from the context value
       }}
     >
       {children}

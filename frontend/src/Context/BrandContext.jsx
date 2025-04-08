@@ -61,7 +61,7 @@ export const BrandProvider = ({ children }) => {
     } catch (error) {
       console.log(error.message);
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
         setIsModalBrandOpen(false);
         setIsbrandLoad(false);
       } else {
@@ -71,9 +71,7 @@ export const BrandProvider = ({ children }) => {
       setIsbrandLoad(false);
     }
   };
-  useEffect(() => {
-    fetchbrand();
-  }, []);
+
   const deletebrand = async (id) => {
     try {
       setIsbrandLoad(true);
@@ -106,6 +104,7 @@ export const BrandProvider = ({ children }) => {
         showBrandModal,
         addbrand,
         deletebrand,
+        fetchbrand,
       }}
     >
       {children}

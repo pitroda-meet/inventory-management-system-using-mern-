@@ -5,7 +5,9 @@ import Loader from "../../Component/Loader";
 import { useUser } from "../../Context/UserContext";
 
 const UserTable = () => {
-  const { users, getAllUser, userLoading, updateroll, deleteuser } = useUser();
+  const { users, userLoading, updateroll, deleteuser, setusers, getAllUser } =
+    useUser();
+
   const handleRoleChange = (value, record) => {
     updateroll(record._id, value);
   };

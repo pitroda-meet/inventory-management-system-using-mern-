@@ -5,7 +5,7 @@ import { InvoiceProvider } from "./Context/InoviceContext";
 import { ProductProvider, useProductContext } from "./Context/ProductContext";
 import { StockProvider } from "./Context/StockContext";
 import { SupplierProvider } from "./Context/SupplierContext";
-import { UserProvider } from "./Context/UserContext";
+import { UserProvider, useUser } from "./Context/UserContext";
 import AppRouters from "./Routes";
 
 function App() {

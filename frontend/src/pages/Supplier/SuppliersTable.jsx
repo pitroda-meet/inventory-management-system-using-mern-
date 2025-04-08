@@ -14,6 +14,10 @@ const SuppliersTable = () => {
     SuppliersModel,
     setSuppliersModel,
   } = useSupplier();
+
+  useEffect(() => {
+    fetchsupplier();
+  }, []);
   const handleDelete = async (record) => {
     try {
       const response = await axios.delete(

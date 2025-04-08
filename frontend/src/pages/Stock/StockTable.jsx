@@ -6,7 +6,9 @@ import Loader from "../../Component/Loader";
 
 const StockTable = () => {
   const { stock, isStockLoading, setStockModel, getAllStock } = useStock();
-
+  useEffect(() => {
+    getAllStock();
+  }, []);
   const columns = [
     { title: "Product Name", dataIndex: ["product_id", "name"] },
     { title: "Purchase Price", dataIndex: "purchase_price" },
