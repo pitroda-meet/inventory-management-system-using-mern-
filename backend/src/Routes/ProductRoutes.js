@@ -8,37 +8,47 @@ import {
   uploadProduct,
 } from "../Controllers/ProductController.js";
 import { upload } from "../middlewares/cloudinary.js"; // Import the middleware
-import { admin, protect, both } from "../middlewares/protect.js";
+import { authorizeRoles, protect } from "../middlewares/protect.js";
 import { updateStockMiddleware } from "../Controllers/StockContoller.js";
 
 const router = express.Router();
 
 router.get(
   "/getproducts",
-  // protect, both,
+  protect,
+  authorizeRoles("Admin", "Staff"),
+
   updateStockMiddleware,
 
   getAllProducts
 );
 router.get(
   "/getproductid/:id",
-  // protect, both,
+  protect,
+
+  authorizeRoles("Admin", "Staff"),
   updateStockMiddleware,
 
   getProductById
 );
 router.post(
   "/uploadproduct",
+  protect,
   upload.single("image"),
-  // protect, admin,
+  authorizeRoles("Admin"),
   uploadProduct
 );
-router.delete("/deleteproduct/:id", protect, admin, deleteProduct);
+router.delete(
+  "/deleteproduct/:id",
+  protect,
+  authorizeRoles("Admin"),
+  deleteProduct
+);
 router.patch(
   "/updateproduct/:id",
   upload.single("image"),
-  // protect,
-  // admin,
+  protect,
+  authorizeRoles("Admin"),
   updateProduct
 );
 

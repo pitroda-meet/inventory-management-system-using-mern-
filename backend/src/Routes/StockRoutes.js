@@ -5,23 +5,11 @@ import {
   updatestock,
   updateStockMiddleware,
 } from "../Controllers/StockContoller.js";
-import { admin, both, protect } from "../middlewares/protect.js";
+import { authorizeRoles, protect } from "../middlewares/protect.js";
 
 const router = express.Router();
-router.post(
-  "/createstock",
-  // protect, admin,
-  createStock
-);
-router.put(
-  "/updatestock/:id",
-  //  protect, admin,
-  updatestock
-);
+router.post("/createstock", protect, authorizeRoles("Admin"), createStock);
+router.put("/updatestock/:id", protect, authorizeRoles("Admin"), updatestock);
 
-router.get(
-  "/getstock",
-  //  protect, both,
-  getAllStock
-);
+router.get("/getstock", protect, authorizeRoles("Admin", "Staff"), getAllStock);
 export default router;
