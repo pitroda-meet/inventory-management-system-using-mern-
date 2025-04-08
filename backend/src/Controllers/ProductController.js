@@ -112,11 +112,6 @@ export const updateProduct = expressAsyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const stock = await Stock.findOne({ product_id: id });
-    if (stock) {
-      stock.purchase_price = cost_price;
-      await stock.save();
-    }
     // Handle image deletion and update
     if (req.file) {
       if (product.image_url) {
