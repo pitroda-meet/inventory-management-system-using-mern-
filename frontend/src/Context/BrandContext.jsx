@@ -18,11 +18,12 @@ export const BrandProvider = ({ children }) => {
         `${import.meta.env.VITE_API_URL}/brand/newBrand`,
 
         brand,
-        // { withCredentials: true },
+
         {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       if (response.data && response.data.brand) {
@@ -37,6 +38,13 @@ export const BrandProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error adding product:", error.response?.data || error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsModalBrandOpen(false);
+        setIsbrandLoad(false);
+      } else {
+        toast.error("An error occurred while adding the brand.");
+      }
     } finally {
       setIsbrandLoad(false);
     }
@@ -46,11 +54,19 @@ export const BrandProvider = ({ children }) => {
     try {
       setIsbrandLoad(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/brand/getbrand`
+        `${import.meta.env.VITE_API_URL}/brand/getbrand`,
+        { withCredentials: true }
       );
       setBrands(response.data.brands || []);
     } catch (error) {
       console.log(error.message);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsModalBrandOpen(false);
+        setIsbrandLoad(false);
+      } else {
+        toast.error("An error occurred while adding the brand.");
+      }
     } finally {
       setIsbrandLoad(false);
     }
@@ -58,6 +74,28 @@ export const BrandProvider = ({ children }) => {
   useEffect(() => {
     fetchbrand();
   }, []);
+  const deletebrand = async (id) => {
+    try {
+      setIsbrandLoad(true);
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/brand/deletebrand/${id}`,
+        { withCredentials: true }
+      );
+      if (response.data && response.data.message) {
+        toast.success(response.data.message);
+        fetchbrand();
+      }
+    } catch (error) {
+      console.log(error.message);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsModalBrandOpen(false);
+        setIsbrandLoad(false);
+      } else {
+        toast.error("An error occurred while deleting the brand.");
+      }
+    }
+  };
   return (
     <BrandContext.Provider
       value={{
@@ -67,6 +105,7 @@ export const BrandProvider = ({ children }) => {
         setIsModalBrandOpen,
         showBrandModal,
         addbrand,
+        deletebrand,
       }}
     >
       {children}

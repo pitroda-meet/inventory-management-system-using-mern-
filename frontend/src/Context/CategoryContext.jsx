@@ -17,13 +17,12 @@ export const CategoryProvider = ({ children }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/category/newcategory`,
-
         category,
-        // { withCredentials: true },
         {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       if (response.data && response.data.category) {
@@ -39,6 +38,13 @@ export const CategoryProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error adding product:", error.response?.data || error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsCategoryLoad(false);
+        setIsModalOpen(false);
+      } else {
+        toast.error("An error occurred while adding the category.");
+      }
     } finally {
       setIsCategoryLoad(false);
     }
@@ -47,11 +53,47 @@ export const CategoryProvider = ({ children }) => {
     try {
       setIsCategoryLoad(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/category/getcategory`
+        `${import.meta.env.VITE_API_URL}/category/getcategory`,
+        { withCredentials: true }
       );
       setCategory(response.data.category);
     } catch (error) {
       console.log(error.message);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsCategoryLoad(false);
+        setIsModalOpen(false);
+      } else {
+        toast.error("An error occurred while fetching categories.");
+      }
+    } finally {
+      setIsCategoryLoad(false);
+    }
+  };
+
+  const deletecategory = async (categoryId) => {
+    try {
+      setIsCategoryLoad(true);
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/category/deletecategory/${categoryId}`,
+
+        { withCredentials: true }
+      );
+      if (response.data && response.data.message) {
+        toast.success(response.data.message);
+
+        fetchCategory();
+      } else {
+        console.error("Unexpected server response:", response.data);
+      }
+    } catch (error) {
+      console.log(error.message);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setIsCategoryLoad(false);
+      } else {
+        toast.error("An error occurred while deleting the category.");
+      }
     } finally {
       setIsCategoryLoad(false);
     }
@@ -64,6 +106,7 @@ export const CategoryProvider = ({ children }) => {
       value={{
         categorys,
         isCategoryLoad,
+        deletecategory,
         isModalOpen,
         setIsModalOpen,
         showModal,
