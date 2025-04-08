@@ -12,7 +12,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ProductsManagement from "../pages/Product/ProductsManagement";
 import EditProducts from "../pages/Product/EditProducts";
 import Customers from "../pages/Customers";
-import Suppliers from "../pages/Suppliers";
+import Suppliers from "../pages/Supplier/Suppliers";
 import Invoice from "../pages/Invoice/Invoice";
 import SalesOrder from "../pages/OrderSales/SalesOrderMain";
 import Cart from "../pages/Cart/Cart";
