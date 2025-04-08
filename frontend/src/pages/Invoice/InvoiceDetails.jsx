@@ -86,7 +86,7 @@ const InvoiceDetails = () => {
                 <strong>INVOICE NO:</strong> INV-001
               </p>
               <p>
-                <strong>DATE:</strong> 10-02-2025
+                <strong>DATE:</strong> {byInvoiceId.createdAt?.slice(0, 10)}
               </p>
               <p>
                 <strong>PAYMENT MODE:</strong> Cash/Card/UPI
@@ -94,13 +94,13 @@ const InvoiceDetails = () => {
             </div>
             <div>
               <p>
-                <strong>CUSTOMER NAME:</strong> John Doe
+                <strong>CUSTOMER NAME:</strong> {byInvoiceId.customer_name}
               </p>
               <p>
-                <strong>CONTACT:</strong> 9876543210
+                <strong>CONTACT:</strong> {byInvoiceId.phone}
               </p>
               <p>
-                <strong>ADDRESS:</strong> Ahmedabad, Gujarat
+                <strong>ADDRESS:</strong> {byInvoiceId.address}
               </p>
             </div>
           </div>
@@ -122,7 +122,7 @@ const InvoiceDetails = () => {
                   <tr key={product._id} className="text-center">
                     <td className="border border-black p-2">{index + 1}</td>
                     <td className="border border-black p-2 text-left">
-                      {product.product_id.name}
+                      {product?.product_id?.name}
                     </td>
                     <td className="border border-black p-2">
                       {product.quantity}

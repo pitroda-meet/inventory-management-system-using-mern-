@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Space } from "antd";
+import { Table, Space, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useInvoice } from "../../Context/InoviceContext";
 import { Link } from "react-router-dom";
@@ -34,33 +34,22 @@ const InvoiceTable = ({ searchText = "" }) => {
       title: "Total Price",
       dataIndex: "total_price",
       key: "total_price",
-      render: (price) => `$${price.toLocaleString()}`,
+      render: (price) => `${price.toLocaleString()}`,
     },
-    {
-      title: "Payment Method",
-      dataIndex: "payment_method",
-      key: "payment_method",
-      render: (value, rowData) => {
-        if (rowData.payment_method) {
-          return rowData.payment_method;
-        } else {
-          return "N/A";
-        }
-      },
-    },
+
     {
       title: "Actions",
       key: "actions",
       render: (value, rowData) => {
         return (
           <Space size="middle">
-            <Link to={`/invoicedetails/${rowData._id}`}>
-              <EyeOutlined className="text-gray-500 cursor-pointer" />
-            </Link>
-
-            <button>
-              <DeleteOutlined className="text-gray-500 cursor-pointer" />
-            </button>
+            <Tooltip title="View Invoice">
+              <Link to={`/invoicedetails/${rowData._id}`}>
+                <div className="p-2 bg-gray-100 rounded-full hover:bg-blue-100 transition-all text-blue-600">
+                  <EyeOutlined />
+                </div>
+              </Link>
+            </Tooltip>
           </Space>
         );
       },
