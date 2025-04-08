@@ -21,7 +21,8 @@ export const ProductProvider = ({ children }) => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/product/getproducts?page=${page}&limit=${limit}`
+        }/product/getproducts?page=${page}&limit=${limit}`,
+        { withCredentials: true }
       );
 
       if (response.data && response.data.products) {
@@ -47,7 +48,8 @@ export const ProductProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/product/getproductid/${productId}`
+        `${import.meta.env.VITE_API_URL}/product/getproductid/${productId}`,
+        { withCredentials: true }
       );
       setEditingProduct(response.data.product);
     } catch (error) {
@@ -64,9 +66,9 @@ export const ProductProvider = ({ children }) => {
         `${import.meta.env.VITE_API_URL}/product/uploadproduct`,
 
         product,
-        // { withCredentials: true },
         {
           headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
         }
       );
       if (response.data && response.data.newProduct) {
@@ -79,7 +81,15 @@ export const ProductProvider = ({ children }) => {
         console.error("Unexpected server response:", response.data);
       }
     } catch (error) {
-      console.error("Error adding product:", error.response?.data || error);
+      if (error.response?.data?.message) {
+        setEditingProduct(null);
+        setIsEditOpen(false);
+        toast.warn(`Product update failed: ${error.response?.data?.message}`);
+      } else {
+        setEditingProduct(null);
+        setIsEditOpen(false);
+        toast.warn("Product update failed: Unknown error");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +101,10 @@ export const ProductProvider = ({ children }) => {
       const response = await axios.patch(
         `${import.meta.env.VITE_API_URL}/product/updateproduct/${productId}`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
       );
 
       console.log("Response from updateProduct API:", response.data);
@@ -113,12 +126,18 @@ export const ProductProvider = ({ children }) => {
       console.error("Error updating product:", error.response?.data || error);
 
       if (error.response?.data?.message) {
-        alert(`Product update failed: ${error.response?.data?.message}`);
+        setEditingProduct(null);
+        setIsEditOpen(false);
+        toast.warn(`Product update failed: ${error.response?.data?.message}`);
       } else {
-        alert("Product update failed: Unknown error");
+        setEditingProduct(null);
+        setIsEditOpen(false);
+        toast.warn("Product update failed: Unknown error");
       }
     } finally {
       setIsLoading(false);
+      setEditingProduct(null);
+      setIsEditOpen(false);
     }
   };
 

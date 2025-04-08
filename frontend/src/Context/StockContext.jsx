@@ -19,6 +19,7 @@ export const StockProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       setStock((prevStock) => [...prevStock, response.data.newstock]);
@@ -27,14 +28,20 @@ export const StockProvider = ({ children }) => {
       toast.success(response.data.message);
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.message || "Failed to add stock"); // Added better error handling
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setStockModel({ open: false, stock: null });
+      } else {
+        toast.error("Failed to add stock");
+        setStockModel({ open: false, stock: null });
+      }
     } finally {
       setStockLoading(false);
     }
   };
 
   // Wrapped in useCallback to prevent unnecessary re-renders
-  const getAllStock = useCallback(async () => {
+  const getAllStock = async () => {
     setStockLoading(true);
     try {
       const response = await axios.get(
@@ -43,16 +50,21 @@ export const StockProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       setStock(response.data.stocks);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to fetch stock data"); // Added toast error handling
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to fetch stocks");
+      }
     } finally {
       setStockLoading(false);
     }
-  }, []);
+  };
 
   // Implemented updateStock function
   const updateStock = async (stockId, updatedStock) => {
@@ -62,6 +74,7 @@ export const StockProvider = ({ children }) => {
         updatedStock,
         {
           headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
       );
       setStock((prevStock) =>
@@ -74,7 +87,13 @@ export const StockProvider = ({ children }) => {
       toast.success(response.data.message);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to update stock"); // Added better error handling
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setStockModel({ open: false, stock: null });
+      } else {
+        toast.error("Failed to update stock");
+        setStockModel({ open: false, stock: null });
+      }
     } finally {
       setStockLoading(false);
     }

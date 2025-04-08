@@ -49,8 +49,16 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Error creating user");
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setisUserModel(false);
+        setUserLoading(false);
+      } else {
+        toast.error("Error creating user");
+        setisUserModel(false);
+      }
     } finally {
+      setUserLoading(false);
       setUserLoading(false);
     }
   };
@@ -72,6 +80,13 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setUserLoading(false);
+      } else {
+        toast.error("Error fetching users");
+        setUserLoading(false);
+      }
     } finally {
       setUserLoading(false);
     }
@@ -99,7 +114,11 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Login failed");
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Login failed");
+      }
     } finally {
       setUserLoading(false);
     }
@@ -122,6 +141,14 @@ export const UserProvider = ({ children }) => {
       getAllUser();
     } catch (error) {
       console.error(error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setUserLoading(false);
+      } else {
+        toast.error("Error updating user role");
+      }
+    } finally {
+      setUserLoading(false);
     }
   };
 
@@ -142,7 +169,11 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error("Error deleting user");
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error deleting user");
+      }
     } finally {
       setUserLoading(false);
     }
@@ -163,6 +194,11 @@ export const UserProvider = ({ children }) => {
       navigate("/signin");
     } catch (error) {
       console.error(error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Logout failed");
+      }
       toast.error("Logout failed");
     } finally {
       setUserLoading(false);

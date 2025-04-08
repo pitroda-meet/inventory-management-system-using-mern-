@@ -24,8 +24,8 @@ export const InvoiceProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            // withCredentials: true,
           },
+          withCredentials: true,
         }
       );
       if (response.data) {
@@ -46,8 +46,8 @@ export const InvoiceProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            // withCredentials: true,
           },
+          withCredentials: true,
         }
       );
 
@@ -96,8 +96,16 @@ export const InvoiceProvider = ({ children }) => {
         clearCart();
       }
     } catch (error) {
-      toast.error("Error creating invoice!");
       console.error("Invoice creation error:", error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+        setisLoadInvoice(false);
+        setisOpenCartModel(false);
+      } else {
+        toast.error("An error occurred while creating the invoice.");
+      }
+    } finally {
+      setisLoadInvoice(false);
     }
   };
   return (
