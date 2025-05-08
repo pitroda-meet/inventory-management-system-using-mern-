@@ -58,6 +58,7 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
           price: item.price,
           stock_id: stockEntry._id,
           quantity: item.quantity,
+          cost_price: product.cost_price,
           discount: item.discount || 0,
           FinalPrice: (item.price - (item.discount || 0)) * item.quantity,
         };
