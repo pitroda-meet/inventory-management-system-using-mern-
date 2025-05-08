@@ -38,12 +38,17 @@ export const InvoiceProvider = ({ children }) => {
       setisLoadInvoice(false);
     }
   };
-  const getInvoice = async () => {
+  const getInvoice = async (params = {}) => {
     setisLoadInvoice(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/invoice/getinvoices`,
         {
+          params: {
+            page: params.page || 1,
+            limit: params.limit || 10,
+            search: params.search || "",
+          },
           headers: {
             "Content-Type": "application/json",
           },
@@ -51,12 +56,17 @@ export const InvoiceProvider = ({ children }) => {
         }
       );
 
-      if (response.data && response.data.invoices) {
+      if (response.data) {
         setInvoice(response.data.invoices);
+        // Return both invoices and total count for pagination
+        return {
+          invoices: response.data.invoices,
+          totalInvoices: response.data.totalInvoices,
+        };
       }
     } catch (error) {
-      console.log(error);
       console.error("Error getting invoice:", error);
+      throw error;
     } finally {
       setisLoadInvoice(false);
     }
