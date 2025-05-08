@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useProductContext } from "../../Context/ProductContext";
 import { Link } from "react-router-dom";
 import Loader from "../../Component/Loader";
-import { Button } from "antd";
+import { Button, Table, Tag, Space } from "antd";
 import { useCategory } from "../../Context/CategoryContext";
 import { useBrand } from "../../Context/BrandContext";
 import {
   PlusOutlined,
   TagsOutlined,
   AppstoreAddOutlined,
+  EditOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 
 const DisplayProducts = () => {
@@ -33,6 +35,102 @@ const DisplayProducts = () => {
       console.error("Error deleting category:", error);
     }
   };
+
+  // Products table columns
+  const productColumns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `$${price}`,
+      align: "center",
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      align: "center",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      ellipsis: true,
+      align: "center",
+    },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+
+      render: (_, record) => (
+        <Space size="middle">
+          <Link to={`/editproduct/${record._id}`}>
+            <Button type="primary" icon={<EditOutlined />}>
+              Edit
+            </Button>
+          </Link>
+        </Space>
+      ),
+    },
+  ];
+
+  // Brands table columns
+  const brandColumns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
+    },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => handledeletebrand(record._id)}
+        >
+          Delete
+        </Button>
+      ),
+    },
+  ];
+
+  // Categories table columns
+  const categoryColumns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
+    },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => handledeletecategory(record._id)}
+        >
+          Delete
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <div className="p-6 max-w-screen-xl mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3 w-full">
@@ -61,121 +159,50 @@ const DisplayProducts = () => {
       </div>
 
       {/* Products Table */}
-      <div className="overflow-x-auto  rounded-lg p-4 mb-6">
+      <div className="rounded-lg p-4 mb-6 bg-white shadow-md">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Products</h2>
-        <table className="w-full text-sm text-left border-collapse bg-white shadow-md">
-          <thead className="text-xs uppercase bg-white text-gray-800">
-            <tr>
-              <th className="px-6 py-3 border">Name</th>
-              <th className="px-6 py-3 border">Price</th>
-              <th className="px-6 py-3 border">Category</th>
-              <th className="px-6 py-3 border">Description</th>
-              <th className="px-6 py-3 border">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length > 0 ? (
-              products.map((product, index) => (
-                <tr key={product._id} className={"bg-white"}>
-                  <td className="px-6 py-4 border">{product.name}</td>
-                  <td className="px-6 py-4 border">${product.price}</td>
-                  <td className="px-6 py-4 border">{product.category}</td>
-                  <td className="px-6 py-4 border">{product.description}</td>
-                  <td className="px-6 py-4 border">
-                    <Link
-                      to={`/editproduct/${product._id}`}
-                      className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="px-6 py-4 text-center border">
-                  No products available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <Table
+          columns={productColumns}
+          dataSource={products}
+          rowKey="_id"
+          bordered
+          pagination={{ pageSize: 5 }}
+          locale={{ emptyText: "No products available" }}
+          scroll={{ x: 600 }}
+          size="small"
+        />
       </div>
 
       {/* Brands & Categories Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Brands Table */}
-        <div className="overflow-x-auto  p-4">
+        <div className="p-4 bg-white shadow-md rounded-lg">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Brands</h2>
-          <table className="w-full text-sm text-left border-collapse bg-white shadow-md rounded-lg">
-            <thead className="text-xs uppercase bg-white text-gray-800">
-              <tr>
-                <th className="px-6 py-3 border">Name</th>
-                <th className="px-6 py-3 border">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {brands.length > 0 ? (
-                brands.map((brand, index) => (
-                  <tr key={brand._id} className={"bg-white"}>
-                    <td className="px-6 py-4 border">{brand.name}</td>
-                    <td className="px-6 py-4 border">
-                      <button
-                        onClick={() => handledeletebrand(brand._id)}
-                        className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={2} className="px-6 py-4 text-center border">
-                    No brands available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <Table
+            columns={brandColumns}
+            dataSource={brands}
+            rowKey="_id"
+            bordered
+            pagination={{ pageSize: 5 }}
+            locale={{ emptyText: "No brands available" }}
+            size="small"
+          />
         </div>
 
         {/* Categories Table */}
-        <div className="overflow-x-auto  p-4">
+        <div className="p-4 bg-white shadow-md rounded-lg">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Categories
           </h2>
-          <table className="w-full text-sm text-left border-collapse bg-white shadow-md rounded-lg">
-            <thead className="text-xs uppercase bg-white text-gray-800">
-              <tr>
-                <th className="px-6 py-3 border">Name</th>
-                <th className="px-6 py-3 border">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categorys.length > 0 ? (
-                categorys.map((category, index) => (
-                  <tr key={category._id} className={"bg-white"}>
-                    <td className="px-6 py-4 border">{category.name}</td>
-                    <td className="px-6 py-4 border">
-                      <button
-                        onClick={() => handledeletecategory(category._id)}
-                        className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={2} className="px-6 py-4 text-center border">
-                    No categories available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <Table
+            columns={categoryColumns}
+            dataSource={categorys}
+            rowKey="_id"
+            bordered
+            pagination={{ pageSize: 5 }}
+            locale={{ emptyText: "No categories available" }}
+            size="small"
+          />
         </div>
       </div>
     </div>
