@@ -22,8 +22,8 @@ const Invoice = new mongoose.Schema(
       require: true,
     },
     address: {
-      type: String, // ✅ Corrected here
-      required: true, // Added required validation
+      type: String,
+      required: true,
     },
     products: [
       {
@@ -36,6 +36,10 @@ const Invoice = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        cost_price: {
+          type: Number,
+          required: true,
+        },
         quantity: {
           type: Number,
           required: true,
@@ -45,7 +49,6 @@ const Invoice = new mongoose.Schema(
           ref: "Stock",
           required: true,
         },
-
         discount: {
           type: Number,
           default: 0,
@@ -56,7 +59,6 @@ const Invoice = new mongoose.Schema(
         },
       },
     ],
-
     total_price: {
       type: Number,
       require: true,
