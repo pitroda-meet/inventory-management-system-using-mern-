@@ -5,6 +5,7 @@ import UserRoutes from "./UserRoutes.js";
 import CategoryRoutes from "./CategoryRoutes.js";
 import BrandRoutes from "./BrandRoutes.js";
 import InvoiceRoute from "./InvoiceRoutes.js";
+import SalesRoutes from "./SalesRoutes.js";
 export {
   ProductRoutes,
   SupplierRoutes,
@@ -13,4 +14,5 @@ export {
   BrandRoutes,
   CategoryRoutes,
   InvoiceRoute,
+  SalesRoutes,
 };
